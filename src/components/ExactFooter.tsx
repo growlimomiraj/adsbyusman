@@ -23,7 +23,6 @@ interface ExactFooterProps {
   onOpenTool: (tool: ToolType) => void;
   onOpenCareers?: () => void;
   onFocusAudit?: () => void;
-  onOpenAdmin?: () => void;
 }
 
 export const ExactFooter: React.FC<ExactFooterProps> = ({
@@ -31,7 +30,6 @@ export const ExactFooter: React.FC<ExactFooterProps> = ({
   onNavigate,
   onOpenConsultation,
   onOpenLegal,
-  onOpenAdmin,
 }) => {
   const [emailInput, setEmailInput] = useState("");
   const [subscribed, setSubscribed] = useState(false);
@@ -158,18 +156,6 @@ export const ExactFooter: React.FC<ExactFooterProps> = ({
               <button onClick={() => onOpenLegal("cookies")} className="hover:underline cursor-pointer">
                 Cookie Settings
               </button>
-              {onOpenAdmin && (
-                <>
-                  <span className="text-white/40">•</span>
-                  <button
-                    onClick={onOpenAdmin}
-                    title="Executive Portal (PIN Required)"
-                    className="opacity-40 hover:opacity-100 hover:text-amber-200 transition-opacity cursor-pointer font-mono text-[11px]"
-                  >
-                    Portal 🔒
-                  </button>
-                </>
-              )}
             </div>
 
             {/* High Contrast Accessibility Toggle */}

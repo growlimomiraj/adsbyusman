@@ -150,11 +150,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
     fetchServerData();
   }, []);
 
-  // Pin verification (PIN: 2026 or usman or 7777)
+  // Pin verification (Password: growlimousman)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = authPin.trim().toLowerCase();
-    if (clean === "2026" || clean === "usman" || clean === "7777" || clean === "admin") {
+    const clean = authPin.trim();
+    if (clean === "growlimousman" || clean.toLowerCase() === "growlimousman") {
       setIsAuthenticated(true);
       sessionStorage.setItem("growlimo_admin_auth", "true");
       setAuthError(false);
@@ -343,19 +343,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 text-center">
-                Enter Your PIN
+                Executive Access Password
               </label>
               <input
                 type="password"
                 value={authPin}
                 onChange={(e) => setAuthPin(e.target.value)}
-                placeholder="PIN (2026 or usman)"
+                placeholder="Enter password"
                 autoFocus
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-center tracking-widest text-lg font-mono focus:outline-none focus:border-[#f25f22] focus:bg-white transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 text-center tracking-wider text-base font-mono focus:outline-none focus:border-[#f25f22] focus:bg-white transition-all"
               />
               {authError && (
                 <p className="text-xs text-red-600 mt-2 text-center font-semibold">
-                  Invalid PIN. Type <span className="font-mono text-slate-900">usman</span> or <span className="font-mono text-slate-900">2026</span>.
+                  Incorrect password. Please try again.
                 </p>
               )}
             </div>

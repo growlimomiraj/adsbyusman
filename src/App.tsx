@@ -251,7 +251,6 @@ export default function App() {
           }}
           onOpenTool={(tool) => setActiveTool(tool)}
           onFocusAudit={handleFocusAudit}
-          onOpenAdmin={() => setIsAdminOpen(true)}
         />
       )}
 
