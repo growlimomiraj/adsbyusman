@@ -20,6 +20,33 @@ export const ContactPage: React.FC<ContactPageProps> = ({ profile, onNavigate })
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!website || !email) return;
+
+    try {
+      const cleanUrl = website.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
+      const newLead = {
+        id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+        name: name || `Prospect (${cleanUrl})`,
+        email,
+        phone: phone || "",
+        website: cleanUrl,
+        revenue: "$1M - $5M / yr",
+        budget,
+        goal,
+        source: "Contact / Work With Us Page",
+        status: "New",
+        score: 95,
+        dealValueEst: budget.includes("25,000") ? 35000 : 15000,
+        notes: notes || "Direct strategic inquiry from Work With Us contact page.",
+        createdAt: new Date().toISOString(),
+        country: "United Arab Emirates",
+      };
+      const existing = localStorage.getItem("growlimo_portal_leads");
+      const currentList = existing ? JSON.parse(existing) : [];
+      localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLead, ...currentList]));
+    } catch (err) {
+      console.warn("Could not save to portal", err);
+    }
+
     setSubmitted(true);
   };
 

@@ -21,6 +21,32 @@ export const GrowlimoAgencyPage: React.FC<GrowlimoAgencyPageProps> = ({
   const handleProposalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formUrl.trim()) return;
+
+    try {
+      const cleanUrl = formUrl.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
+      const newLead = {
+        id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+        name: `Prospect (${cleanUrl})`,
+        email: `partner@${cleanUrl}`,
+        website: cleanUrl,
+        revenue: "$1M - $5M / yr",
+        budget: formBudget,
+        goal: formGoal,
+        source: "Growlimo Proposal Card",
+        status: "New",
+        score: 93,
+        dealValueEst: formBudget.includes("75k") ? 75000 : formBudget.includes("25k") ? 35000 : 15000,
+        notes: "Direct high-intent agency proposal request from Growlimo Agency Page.",
+        createdAt: new Date().toISOString(),
+        country: "United Arab Emirates",
+      };
+      const existing = localStorage.getItem("growlimo_portal_leads");
+      const currentList = existing ? JSON.parse(existing) : [];
+      localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLead, ...currentList]));
+    } catch (err) {
+      console.warn("Could not save to portal", err);
+    }
+
     setFormSubmitted(true);
   };
 

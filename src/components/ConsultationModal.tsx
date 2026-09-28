@@ -38,6 +38,33 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Save lead locally to admin portal pipeline
+    try {
+      const newLeadObj = {
+        id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+        name: fullName || "Prospect Client",
+        email,
+        phone: phone || "",
+        website: website || "domain.com",
+        revenue: revenue || "$1M - $5M / yr",
+        budget: "$10k - $25k / mo",
+        goal: goal || "Organic Search & Customer Acquisition Scale",
+        source: "Consultation Modal",
+        status: "New",
+        score: 92,
+        dealValueEst: 20000,
+        notes: "Inbound discovery lead submitted via growth proposal request.",
+        createdAt: new Date().toISOString(),
+        country: "United Arab Emirates",
+      };
+      const existing = localStorage.getItem("growlimo_portal_leads");
+      const currentList = existing ? JSON.parse(existing) : [];
+      localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLeadObj, ...currentList]));
+    } catch (saveErr) {
+      console.warn("Could not save to portal leads", saveErr);
+    }
+
     try {
       const res = await fetch("/api/lead-submit", {
         method: "POST",

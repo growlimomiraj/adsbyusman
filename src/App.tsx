@@ -12,6 +12,7 @@ import { LegalModal, LegalTab } from "./components/LegalModal";
 import { AuditOrderModal, AuditOrderData } from "./components/AuditOrderModal";
 import { AuditResult, ProfileConfig } from "./types";
 import { defaultProfile } from "./data/marketingData";
+import { AdminPortal } from "./components/admin/AdminPortal";
 
 // Growlimo Pages
 import { GrowlimoAgencyPage } from "./components/pages/GrowlimoAgencyPage";
@@ -49,8 +50,34 @@ export default function App() {
   const [targetAuditUrl, setTargetAuditUrl] = useState("");
   const [isAuditOrderOpen, setIsAuditOrderOpen] = useState(false);
   const [auditOrderUrl, setAuditOrderUrl] = useState("");
+  const [isAdminOpen, setIsAdminOpen] = useState<boolean>(() => {
+    return window.location.hash === "#admin";
+  });
 
   const auditInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Hidden admin keyboard shortcut: Ctrl+Shift+A or Command+Shift+A
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "A" || e.key === "a")) {
+        e.preventDefault();
+        setIsAdminOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Sync hash changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === "#admin") {
+        setIsAdminOpen(true);
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
 
   // Navigate between pages and scroll to top
   const handleNavigate = (page: string) => {
@@ -224,6 +251,19 @@ export default function App() {
           }}
           onOpenTool={(tool) => setActiveTool(tool)}
           onFocusAudit={handleFocusAudit}
+          onOpenAdmin={() => setIsAdminOpen(true)}
+        />
+      )}
+
+      {/* Hidden Executive Admin Portal */}
+      {isAdminOpen && (
+        <AdminPortal
+          onClose={() => {
+            setIsAdminOpen(false);
+            if (window.location.hash === "#admin") {
+              window.history.pushState(null, "", window.location.pathname);
+            }
+          }}
         />
       )}
 

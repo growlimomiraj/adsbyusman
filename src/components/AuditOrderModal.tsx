@@ -60,6 +60,33 @@ export const AuditOrderModal: React.FC<AuditOrderModalProps> = ({
     setIsSubmitting(true);
 
     try {
+      // Sync into Usman's Admin Portal
+      try {
+        const cleanDomain = url.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
+        const newLead = {
+          id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+          name: fullName.trim() || `Owner of ${cleanDomain}`,
+          email: email.trim(),
+          phone: "",
+          website: cleanDomain,
+          revenue: "$1M - $5M / yr",
+          budget: "$10k - $25k / mo",
+          goal: focusArea,
+          source: "Bespoke Audit Order",
+          status: "New",
+          score: 89,
+          dealValueEst: 18000,
+          notes: notes.trim() || "Requested 24-hour custom website teardown.",
+          createdAt: new Date().toISOString(),
+          country: "Global Scan",
+        };
+        const existing = localStorage.getItem("growlimo_portal_leads");
+        const currentList = existing ? JSON.parse(existing) : [];
+        localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLead, ...currentList]));
+      } catch (e) {
+        console.warn("Could not save audit to portal leads", e);
+      }
+
       const res = await fetch("/api/order-audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
