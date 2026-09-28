@@ -72,28 +72,28 @@ export const GrowlimoAgencyPage: React.FC<GrowlimoAgencyPageProps> = ({
 
   const caseStudies = [
     {
-      client: "Adobe",
-      metric: "+312%",
-      label: "Growth in High-Value Commercial Footprint",
-      desc: "Restructured multi-regional keyword taxonomy and scaled organic search visibility for Adobe Creative Cloud and Enterprise software solutions.",
+      client: "Service My Car",
+      metric: "+340%",
+      label: "Growth in Qualified Service Bookings",
+      desc: "Engineered high-intent local and regional SEO clusters across Dubai, UAE & the UK while optimizing paid acquisition pipelines.",
     },
     {
-      client: "Western Union",
-      metric: "+184%",
-      label: "Qualified Organic Traffic Growth",
-      desc: "Expanded international search dominance across 40+ countries and accelerated cross-border money transfer digital customer acquisition.",
+      client: "AZCO Real Estate",
+      metric: "5.2x",
+      label: "Increase in High-Net-Worth Investor Leads",
+      desc: "Architected multi-channel performance campaigns and high-intent luxury property landing funnels capturing international buyers.",
     },
     {
-      client: "SoFi",
-      metric: "4.1x",
-      label: "Improvement in Blended CAC",
-      desc: "Optimized full-funnel search intent and paid media bidding strategy to drive high-margin financial loan applications at scale.",
+      client: "Modern Wall Arts",
+      metric: "+280%",
+      label: "Direct-to-Consumer E-Commerce Revenue",
+      desc: "Implemented comprehensive Google Shopping, Search, and Meta catalog optimization driving record seasonal conversion rates.",
     },
     {
-      client: "Champion",
-      metric: "+62%",
-      label: "Increase in E-Commerce Organic Revenue",
-      desc: "Implemented technical e-commerce faceted navigation fixes and targeted lifestyle apparel queries that doubled non-brand conversions.",
+      client: "Human Concern International",
+      metric: "4.4x",
+      label: "Seasonal Donor Acquisition & ROAS",
+      desc: "Scaled global humanitarian relief campaigns with programmatic search, retargeting architecture, and frictionless donation flows.",
     },
   ];
 
