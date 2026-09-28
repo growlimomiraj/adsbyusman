@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Users,
   TrendingUp,
@@ -26,13 +26,58 @@ import {
   ArrowUpRight,
   Award,
   Layers,
-  Check
+  Check,
+  Trash2,
+  Archive,
+  X
 } from "lucide-react";
 import { Lead, SiteAuditLog } from "../../types/admin";
 import { initialLeads, initialAuditLogs } from "../../data/adminSeed";
 
 interface AdminPortalProps {
   onClose: () => void;
+}
+
+// Format date accurately into readable format: "Sep 28, 2026, 2:15 PM"
+export function formatAccurateDateTime(isoString?: string): string {
+  if (!isoString) return "Recent";
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return isoString;
+    return d.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    return isoString;
+  }
+}
+
+// Relative time: "4 hours ago", "Yesterday", "3 days ago"
+export function formatRelativeTime(isoString?: string): string {
+  if (!isoString) return "Just now";
+  try {
+    const d = new Date(isoString);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    if (diffMs < 0) return "Just now";
+    const diffMinutes = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMinutes < 5) return "Just now";
+    if (diffMinutes < 60) return `${diffMinutes} mins ago`;
+    if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  } catch {
+    return "Recent";
+  }
 }
 
 export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
@@ -43,38 +88,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
   const [authPin, setAuthPin] = useState("");
   const [authError, setAuthError] = useState(false);
 
-  // Leads State with persistent localStorage
-  const [leads, setLeads] = useState<Lead[]>(() => {
-    const saved = localStorage.getItem("growlimo_portal_leads");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length) return parsed;
-      } catch (e) {
-        // fallback to seed
-      }
-    }
-    return initialLeads;
-  });
-
-  const [auditLogs] = useState<SiteAuditLog[]>(() => {
-    const saved = localStorage.getItem("growlimo_portal_audits");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      } catch (e) {}
-    }
-    return initialAuditLogs;
-  });
+  // Leads State - initialized from server API with seed fallback
+  const [leads, setLeads] = useState<Lead[]>(initialLeads);
+  const [auditLogs, setAuditLogs] = useState<SiteAuditLog[]>(initialAuditLogs);
+  const [isLoadingData, setIsLoadingData] = useState<boolean>(true);
+  const [lastRefreshed, setLastRefreshed] = useState<string>("");
 
   // UI Navigation Tabs
-  const [currentTab, setCurrentTab] = useState<"pipeline" | "leads" | "audits" | "competitive">("leads");
+  const [currentTab, setCurrentTab] = useState<"leads" | "pipeline" | "audits" | "competitive">("leads");
 
   // Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("All");
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(leads[0] || null);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
   // Quick New Lead Modal
   const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false);
@@ -86,6 +112,44 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
   const [newLeadRevenue, setNewLeadRevenue] = useState("$5M - $20M / yr");
   const [newLeadGoal, setNewLeadGoal] = useState("Enterprise SEO & Paid Media Scale");
 
+  // Delete Confirmation State
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fetch true server database so when opening on ANY new device, all leads are instantly present with exact timestamps
+  const fetchServerData = async () => {
+    setIsLoadingData(true);
+    try {
+      const [leadsRes, auditsRes] = await Promise.all([
+        fetch("/api/admin/leads").then((r) => r.json()).catch(() => null),
+        fetch("/api/admin/audits").then((r) => r.json()).catch(() => null),
+      ]);
+
+      if (leadsRes && Array.isArray(leadsRes.leads) && leadsRes.leads.length > 0) {
+        setLeads(leadsRes.leads);
+        if (!selectedLead || !leadsRes.leads.find((l: Lead) => l.id === selectedLead.id)) {
+          setSelectedLead(leadsRes.leads[0]);
+        }
+      } else {
+        setSelectedLead(initialLeads[0]);
+      }
+
+      if (auditsRes && Array.isArray(auditsRes.audits)) {
+        setAuditLogs(auditsRes.audits);
+      }
+
+      setLastRefreshed(new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }));
+    } catch (e) {
+      console.warn("Could not load server leads, using local store", e);
+    } finally {
+      setIsLoadingData(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchServerData();
+  }, []);
+
   // Pin verification (PIN: 2026 or usman or 7777)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,6 +158,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
       setIsAuthenticated(true);
       sessionStorage.setItem("growlimo_admin_auth", "true");
       setAuthError(false);
+      fetchServerData();
     } else {
       setAuthError(true);
     }
@@ -104,48 +169,93 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
     sessionStorage.removeItem("growlimo_admin_auth");
   };
 
-  // Status updates
-  const handleUpdateStatus = (leadId: string, newStatus: Lead["status"]) => {
-    setLeads((prev) => {
-      const updated = prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l));
-      localStorage.setItem("growlimo_portal_leads", JSON.stringify(updated));
-      return updated;
-    });
+  // Status updates - syncs to backend server
+  const handleUpdateStatus = async (leadId: string, newStatus: Lead["status"]) => {
+    // Optimistic UI update
+    setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l)));
     if (selectedLead && selectedLead.id === leadId) {
       setSelectedLead((prev) => (prev ? { ...prev, status: newStatus } : null));
     }
+
+    try {
+      const res = await fetch(`/api/admin/leads/${leadId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      const data = await res.json();
+      if (data && data.leads) {
+        setLeads(data.leads);
+      }
+    } catch (err) {
+      console.error("Status update error:", err);
+    }
   };
 
-  // Add lead handler
-  const handleCreateLead = (e: React.FormEvent) => {
+  // Delete lead handler - syncs to backend server database
+  const handleConfirmDelete = async () => {
+    if (!leadToDelete) return;
+    const targetId = leadToDelete.id;
+    setIsDeleting(true);
+
+    // Optimistic removal
+    const remaining = leads.filter((l) => l.id !== targetId);
+    setLeads(remaining);
+    if (selectedLead?.id === targetId) {
+      setSelectedLead(remaining[0] || null);
+    }
+
+    try {
+      const res = await fetch(`/api/admin/leads/${targetId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data && data.leads) {
+        setLeads(data.leads);
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+    } finally {
+      setIsDeleting(false);
+      setLeadToDelete(null);
+    }
+  };
+
+  // Add lead handler - saves to server database with the current accurate date & time
+  const handleCreateLead = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newLeadName.trim() || !newLeadEmail.trim()) return;
 
-    const newLead: Lead = {
-      id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
-      name: newLeadName,
-      email: newLeadEmail,
-      phone: newLeadPhone || "+1 (555) 000-0000",
-      website: newLeadWebsite || "domain.com",
+    const payload = {
+      name: newLeadName.trim(),
+      email: newLeadEmail.trim(),
+      phone: newLeadPhone.trim() || "+1 (555) 000-0000",
+      website: newLeadWebsite.trim() || "domain.com",
       revenue: newLeadRevenue,
       budget: newLeadBudget,
-      goal: newLeadGoal,
+      goal: newLeadGoal.trim(),
       source: "Manual Direct Entry",
       status: "New",
-      score: 92,
-      dealValueEst: 25000,
       notes: "Logged directly into Usman's Executive Portal.",
-      createdAt: new Date().toISOString(),
       country: "United Arab Emirates",
     };
 
-    const updated = [newLead, ...leads];
-    setLeads(updated);
-    localStorage.setItem("growlimo_portal_leads", JSON.stringify(updated));
-    setSelectedLead(newLead);
-    setIsAddLeadModalOpen(false);
+    try {
+      const res = await fetch("/api/admin/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data && data.leads) {
+        setLeads(data.leads);
+        setSelectedLead(data.leads[0]);
+      }
+    } catch (err) {
+      console.error("Create lead error:", err);
+    }
 
-    // Reset inputs
+    setIsAddLeadModalOpen(false);
     setNewLeadName("");
     setNewLeadEmail("");
     setNewLeadPhone("");
@@ -197,7 +307,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
       l.dealValueEst,
       `"${l.budget || ""}"`,
       `"${l.revenue || ""}"`,
-      l.createdAt,
+      formatAccurateDateTime(l.createdAt),
     ]);
     const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
@@ -336,6 +446,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
 
         {/* Right Action buttons */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            onClick={fetchServerData}
+            title="Refresh database"
+            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer border border-slate-200"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoadingData ? "animate-spin text-[#f25f22]" : ""}`} />
+          </button>
+
           <button
             onClick={() => setIsAddLeadModalOpen(true)}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f25f22] hover:bg-[#d94e14] text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
@@ -503,10 +621,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                     <tr className="border-b border-slate-200 text-slate-500 text-[10px] uppercase font-bold tracking-wider bg-slate-50/70">
                       <th className="py-2.5 pl-3">Prospect &amp; Contact</th>
                       <th className="py-2.5">Domain</th>
+                      <th className="py-2.5">Date Ingested</th>
                       <th className="py-2.5">Monthly Budget</th>
                       <th className="py-2.5">Status</th>
-                      <th className="py-2.5">Quality</th>
                       <th className="py-2.5 pr-3 text-right">Est. Retainer</th>
+                      <th className="py-2.5 pr-2 text-center w-12">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -514,7 +633,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                       <tr
                         key={lead.id}
                         onClick={() => setSelectedLead(lead)}
-                        className={`hover:bg-slate-50 transition-colors cursor-pointer ${
+                        className={`hover:bg-slate-50 transition-colors cursor-pointer group ${
                           selectedLead?.id === lead.id ? "bg-orange-50/50" : ""
                         }`}
                       >
@@ -539,6 +658,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                             <ExternalLink className="w-3 h-3 text-slate-400" />
                           </a>
                         </td>
+                        <td className="py-3.5">
+                          <div className="text-slate-800 font-semibold text-[11px] whitespace-nowrap">
+                            {formatRelativeTime(lead.createdAt)}
+                          </div>
+                          <div className="text-[9.5px] font-mono text-slate-400">
+                            {formatAccurateDateTime(lead.createdAt)}
+                          </div>
+                        </td>
                         <td className="py-3.5 text-slate-600 font-medium">
                           {lead.budget || lead.revenue}
                         </td>
@@ -557,27 +684,29 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                             {lead.status}
                           </span>
                         </td>
-                        <td className="py-3.5">
-                          <div className="flex items-center gap-2">
-                            <div className="w-16 h-1.5 rounded-full bg-slate-200 overflow-hidden">
-                              <div
-                                className="h-full bg-gradient-to-r from-orange-500 to-emerald-500 rounded-full"
-                                style={{ width: `${lead.score}%` }}
-                              />
-                            </div>
-                            <span className="font-mono text-[11px] font-bold text-slate-700">
-                              {lead.score}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="py-3.5 pr-3 text-right font-mono font-bold text-emerald-600">
+                        <td className="py-3.5 pr-3 text-right font-mono font-bold text-emerald-600 whitespace-nowrap">
                           ${(lead.dealValueEst / 1000).toFixed(0)}k/mo
+                        </td>
+                        <td className="py-3.5 pr-2 text-center" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => setLeadToDelete(lead)}
+                            title="Remove lead"
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+
+              {filteredLeads.length === 0 && (
+                <div className="text-center py-12 text-slate-400 text-xs">
+                  No matching leads found. Try a different search or filter.
+                </div>
+              )}
             </div>
 
             {/* Right Prospect Teardown Pane */}
@@ -604,7 +733,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
                     <div className="flex items-center gap-2 text-slate-700">
                       <Mail className="w-3.5 h-3.5 text-[#f25f22]" />
-                      <a href={`mailto:${selectedLead.email}`} className="hover:underline font-semibold">
+                      <a href={`mailto:${selectedLead.email}`} className="hover:underline font-semibold truncate max-w-[240px]">
                         {selectedLead.email}
                       </a>
                     </div>
@@ -626,6 +755,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                       >
                         {selectedLead.website}
                       </a>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-600 pt-1 border-t border-slate-200 text-[11px]">
+                      <Calendar className="w-3.5 h-3.5 text-[#f25f22]" />
+                      <span>Received: <strong>{formatAccurateDateTime(selectedLead.createdAt)}</strong></span>
                     </div>
                   </div>
 
@@ -681,6 +814,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                       ))}
                     </div>
                   </div>
+
+                  {/* Danger Zone: Delete Option */}
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400">Lead Record Actions</span>
+                    <button
+                      onClick={() => setLeadToDelete(selectedLead)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer border border-transparent hover:border-red-200"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Remove Lead</span>
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-slate-400 text-xs">
@@ -689,7 +834,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
               )}
 
               <div className="pt-4 border-t border-slate-100 text-[10px] text-slate-400 text-center font-medium">
-                Live sync active with Growlimo API
+                Connected to persistent database • {lastRefreshed ? `Synced at ${lastRefreshed}` : "Active"}
               </div>
             </div>
           </div>
@@ -737,13 +882,25 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                         <div
                           key={lead.id}
                           onClick={() => setSelectedLead(lead)}
-                          className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                          className={`p-3 rounded-xl border transition-all cursor-pointer relative group ${
                             selectedLead?.id === lead.id
                               ? "bg-orange-50 border-[#f25f22] shadow-sm"
                               : "bg-slate-50/60 border-slate-200 hover:border-slate-300 hover:bg-slate-100/80"
                           }`}
                         >
-                          <div className="flex items-start justify-between gap-1 mb-1.5">
+                          {/* Quick delete on kanban hover */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setLeadToDelete(lead);
+                            }}
+                            title="Remove lead"
+                            className="absolute top-2 right-2 p-1 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+
+                          <div className="flex items-start justify-between gap-1 mb-1.5 pr-4">
                             <span className="font-bold text-xs text-slate-900 truncate max-w-[130px]">
                               {lead.name}
                             </span>
@@ -752,8 +909,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                             </span>
                           </div>
 
-                          <div className="text-[11px] font-mono text-slate-500 truncate mb-2">
+                          <div className="text-[11px] font-mono text-slate-500 truncate mb-1">
                             {lead.website}
+                          </div>
+
+                          <div className="text-[9.5px] font-mono text-slate-400 mb-2">
+                            {formatRelativeTime(lead.createdAt)}
                           </div>
 
                           <p className="text-[10px] text-slate-700 line-clamp-2 leading-relaxed mb-2.5 font-medium">
@@ -838,7 +999,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 mb-3">
+                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 mb-2">
                     <div>
                       <span>Traffic: </span>
                       <strong className="text-slate-900 font-mono">{log.monthlyTraffic.toLocaleString()}</strong>
@@ -847,6 +1008,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
                       <span>Domain Auth: </span>
                       <strong className="text-slate-900 font-mono">{log.domainAuthority}</strong>
                     </div>
+                  </div>
+
+                  <div className="text-[10px] text-slate-400 font-mono mb-2">
+                    {formatAccurateDateTime(log.timestamp)} ({formatRelativeTime(log.timestamp)})
                   </div>
 
                   <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-500">
@@ -945,11 +1110,53 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
         )}
       </div>
 
+      {/* CONFIRMATION MODAL: REMOVE LEAD */}
+      {leadToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in select-none">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative text-slate-900 text-center">
+            <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-200">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-lg font-black text-slate-900 mb-1">Remove Prospect Lead?</h3>
+            <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+              Are you sure you want to permanently delete <strong className="text-slate-800">{leadToDelete.name}</strong> ({leadToDelete.website}) from your pipeline?
+            </p>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={handleConfirmDelete}
+                className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+              >
+                {isDeleting ? "Deleting..." : "Yes, Remove"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLeadToDelete(null)}
+                className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors cursor-pointer border border-slate-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MODAL: MANUAL LEAD / QUERY LOGGING (Clean White Background) */}
       {isAddLeadModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in select-none">
           <div className="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 shadow-2xl relative text-slate-900">
-            <h3 className="text-xl font-black text-slate-900 mb-1">Log New Lead / Client Query</h3>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-xl font-black text-slate-900">Log New Lead / Client Query</h3>
+              <button
+                onClick={() => setIsAddLeadModalOpen(false)}
+                className="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
             <p className="text-xs text-slate-500 mb-5">
               Record a direct phone call, WhatsApp message, or VIP referral into Usman&apos;s pipeline.
             </p>

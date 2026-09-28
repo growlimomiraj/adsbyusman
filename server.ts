@@ -2,6 +2,14 @@ import express from "express";
 import path from "path";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+import {
+  readLeads,
+  addLead,
+  deleteLead,
+  updateLeadStatus,
+  readAudits,
+  addAudit,
+} from "./src/lib/serverDataStore";
 
 dotenv.config();
 
@@ -712,6 +720,29 @@ app.post("/api/order-audit", (req, res) => {
   }
   const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
   const orderId = `AUD-${Math.floor(100000 + Math.random() * 900000)}`;
+  
+  // Store into persistent leads for Usman
+  try {
+    addLead({
+      id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+      name: fullName || `Owner of ${cleanUrl}`,
+      email,
+      website: cleanUrl,
+      revenue: "$1M - $5M / yr",
+      budget: "$10k - $25k / mo",
+      goal: focusArea || "Full Technical SEO & AI Teardown",
+      source: "Bespoke Audit Order",
+      status: "New",
+      score: 90,
+      dealValueEst: 18000,
+      notes: notes || "Requested 24h bespoke audit teardown.",
+      createdAt: new Date().toISOString(),
+      country: "Global Inbound",
+    });
+  } catch (e) {
+    console.error("Failed to persist lead from audit order:", e);
+  }
+
   console.log("New Audit Order Received:", {
     orderId,
     url: cleanUrl,
@@ -734,13 +765,128 @@ app.post("/api/order-audit", (req, res) => {
 
 // POST /api/lead-submit: Strategy consultation / proposal request
 app.post("/api/lead-submit", (req, res) => {
-  const { name, email, website, revenue, goal } = req.body;
+  const { name, email, phone, website, revenue, budget, goal, source } = req.body;
+  const cleanWebsite = (website || "domain.com").replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
+  
+  let newLead;
+  try {
+    const leads = addLead({
+      id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+      name: name || `Prospect (${cleanWebsite})`,
+      email: email || "inquiry@client.com",
+      phone: phone || "",
+      website: cleanWebsite,
+      revenue: revenue || "$1M - $5M / yr",
+      budget: budget || "$10k - $25k / mo",
+      goal: goal || "Organic Search & Customer Acquisition Scale",
+      source: source || "Consultation Proposal",
+      status: "New",
+      score: 93,
+      dealValueEst: 25000,
+      notes: "Inbound discovery lead submitted via growth proposal request.",
+      createdAt: new Date().toISOString(),
+      country: "United Arab Emirates",
+    });
+    newLead = leads[0];
+  } catch (err) {
+    console.error("Failed to persist lead:", err);
+  }
+
   console.log("New Consultation Booking:", { name, email, website, revenue, goal, time: new Date() });
   res.json({
     success: true,
-    message: "Thank you! Your customized growth strategy proposal has been queued. A senior strategist from our team will reach out within 24 hours.",
+    lead: newLead,
+    message: "Thank you! Your customized growth strategy proposal has been queued. Muhammad Usman & team will reach out within 24 hours.",
     referenceId: `GL-${Math.floor(100000 + Math.random() * 900000)}`,
   });
+});
+
+// --- USMAN'S EXECUTIVE ADMIN PORTAL ENDPOINTS ---
+// GET /api/admin/leads: Retrieve all stored leads (persists across all devices & browsers)
+app.get("/api/admin/leads", (_req, res) => {
+  try {
+    const leads = readLeads();
+    res.json({ leads, total: leads.length, serverTime: new Date().toISOString() });
+  } catch (err) {
+    console.error("Error fetching leads:", err);
+    res.status(500).json({ error: "Failed to read leads" });
+  }
+});
+
+// POST /api/admin/leads: Manually create a new lead
+app.post("/api/admin/leads", (req, res) => {
+  try {
+    const { name, email, phone, website, revenue, budget, goal, source, notes, status, country } = req.body;
+    if (!name || !email) {
+      res.status(400).json({ error: "Name and email are required" });
+      return;
+    }
+    const cleanWebsite = (website || "domain.com").replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
+    const dealValue = (budget || "").includes("75k") ? 75000 : (budget || "").includes("25k") ? 35000 : 15000;
+
+    const updatedLeads = addLead({
+      id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone || "",
+      website: cleanWebsite,
+      revenue: revenue || "$1M - $5M / yr",
+      budget: budget || "$25k - $75k / mo",
+      goal: goal || "Enterprise SEO & Paid Media Scale",
+      source: source || "Manual Direct Entry",
+      status: status || "New",
+      score: 92,
+      dealValueEst: dealValue,
+      notes: notes || "Logged directly into Usman's Executive Portal.",
+      createdAt: new Date().toISOString(),
+      country: country || "United Arab Emirates",
+    });
+
+    res.json({ success: true, leads: updatedLeads });
+  } catch (err) {
+    console.error("Error creating lead:", err);
+    res.status(500).json({ error: "Failed to create lead" });
+  }
+});
+
+// PATCH /api/admin/leads/:id: Update status of a lead
+app.patch("/api/admin/leads/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    if (!status) {
+      res.status(400).json({ error: "Status required" });
+      return;
+    }
+    const updated = updateLeadStatus(id, status);
+    res.json({ success: true, leads: updated });
+  } catch (err) {
+    console.error("Error updating lead:", err);
+    res.status(500).json({ error: "Failed to update lead" });
+  }
+});
+
+// DELETE /api/admin/leads/:id: Remove a lead from the database
+app.delete("/api/admin/leads/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = deleteLead(id);
+    res.json({ success: true, leads: updated });
+  } catch (err) {
+    console.error("Error deleting lead:", err);
+    res.status(500).json({ error: "Failed to delete lead" });
+  }
+});
+
+// GET /api/admin/audits: Retrieve all website audit logs
+app.get("/api/admin/audits", (_req, res) => {
+  try {
+    const audits = readAudits();
+    res.json({ audits, total: audits.length, serverTime: new Date().toISOString() });
+  } catch (err) {
+    console.error("Error reading audits:", err);
+    res.status(500).json({ error: "Failed to read audits" });
+  }
 });
 
 // Vite middleware for development, static serve for production
