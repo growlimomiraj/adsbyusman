@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="growlimoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7a3d" />
+      <stop offset="100%" stop-color="#f25f22" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect width="64" height="64" rx="16" fill="url(#growlimoGrad)" filter="url(#shadow)" />
+
+  <!-- Stylized Monogram "U" & Growth Arrow Motif -->
+  <!-- Bold U shape -->
+  <path d="M19 16 V34 C19 41.5 24.5 47 32 47 C39.5 47 45 41.5 45 34 V16" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="6.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Diagonal growth ascending arrow accent inside -->
+  <path d="M28 32 L36 24 M36 24 H30 M36 24 V30" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="3" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Glowing apex dot -->
+  <circle cx="45" cy="16" r="3" fill="#ffffff" />
+</svg>
