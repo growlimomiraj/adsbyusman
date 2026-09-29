@@ -105,11 +105,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ profile, onNavigate, onOpe
               <div className="relative w-64 sm:w-80">
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#f25f22]/30 via-orange-100 to-amber-100 rounded-3xl -rotate-2 scale-102" />
                 <div className="relative bg-white border-2 border-orange-200/90 rounded-3xl p-4 shadow-2xl group">
-                  <div className="relative h-80 sm:h-96 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner">
+                  <div className="relative h-80 sm:h-[420px] w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner select-none">
                     <img
-                      src={profile.avatarUrl || "/usman.png"}
+                      src="/usman.png"
                       alt="Muhammad Usman"
-                      className="w-full h-full object-cover object-top"
+                      className="w-full h-full object-cover object-center"
                       onError={(e) => {
                         e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
                       }}

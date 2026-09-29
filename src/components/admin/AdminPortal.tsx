@@ -116,7 +116,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Fetch true server database so when opening on ANY new device, all leads are instantly present with exact timestamps
+  // Fetch true server database and combine with any local submission cache
   const fetchServerData = async () => {
     setIsLoadingData(true);
     try {
@@ -125,13 +125,33 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
         fetch("/api/admin/audits").then((r) => r.json()).catch(() => null),
       ]);
 
-      if (leadsRes && Array.isArray(leadsRes.leads) && leadsRes.leads.length > 0) {
-        setLeads(leadsRes.leads);
-        if (!selectedLead || !leadsRes.leads.find((l: Lead) => l.id === selectedLead.id)) {
-          setSelectedLead(leadsRes.leads[0]);
+      // Read any locally submitted leads
+      let localLeads: Lead[] = [];
+      try {
+        const stored = localStorage.getItem("growlimo_portal_leads");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) localLeads = parsed;
         }
+      } catch (err) {}
+
+      let combinedLeads: Lead[] = [];
+      if (leadsRes && Array.isArray(leadsRes.leads) && leadsRes.leads.length > 0) {
+        combinedLeads = [...leadsRes.leads];
       } else {
-        setSelectedLead(initialLeads[0]);
+        combinedLeads = [...initialLeads];
+      }
+
+      // Merge localLeads by ID to avoid duplicates, with local leads at the top
+      if (localLeads.length > 0) {
+        const existingIds = new Set(combinedLeads.map((l) => l.id));
+        const newLocal = localLeads.filter((l) => !existingIds.has(l.id));
+        combinedLeads = [...newLocal, ...combinedLeads];
+      }
+
+      setLeads(combinedLeads);
+      if (!selectedLead || !combinedLeads.find((l: Lead) => l.id === selectedLead.id)) {
+        setSelectedLead(combinedLeads[0]);
       }
 
       if (auditsRes && Array.isArray(auditsRes.audits)) {
@@ -148,6 +168,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose }) => {
 
   useEffect(() => {
     fetchServerData();
+
+    // Listen for storage events (when user submits inquiry in another tab or modal)
+    const handleStorage = () => {
+      fetchServerData();
+    };
+    window.addEventListener("storage", handleStorage);
+
+    // Auto-refresh polling every 10 seconds so new queries immediately appear in Admin
+    const interval = setInterval(fetchServerData, 10000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      clearInterval(interval);
+    };
   }, []);
 
   // Pin verification (Password: growlimousman)

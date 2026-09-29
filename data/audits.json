@@ -1,0 +1,52 @@
+[
+  {
+    "id": "AUD-10921",
+    "domain": "gulfexoticmotors.ae",
+    "score": 64,
+    "monthlyTraffic": 14200,
+    "domainAuthority": 29,
+    "ipLocation": "Dubai, UAE",
+    "timestamp": "2026-09-29T12:17:45.140Z",
+    "emailCaptured": "tariq@gulfexoticmotors.ae"
+  },
+  {
+    "id": "AUD-10920",
+    "domain": "harleydiagnostics.co.uk",
+    "score": 72,
+    "monthlyTraffic": 28500,
+    "domainAuthority": 41,
+    "ipLocation": "London, UK",
+    "timestamp": "2026-09-28T14:00:45.140Z",
+    "emailCaptured": "ereed@harleydiagnostics.co.uk"
+  },
+  {
+    "id": "AUD-10919",
+    "domain": "azuradubaiproperties.com",
+    "score": 58,
+    "monthlyTraffic": 8900,
+    "domainAuthority": 24,
+    "ipLocation": "Dubai, UAE",
+    "timestamp": "2026-09-26T15:10:45.140Z",
+    "emailCaptured": "rfaisal@azuradubaiproperties.com"
+  },
+  {
+    "id": "AUD-10918",
+    "domain": "purebotanicals.ca",
+    "score": 68,
+    "monthlyTraffic": 42100,
+    "domainAuthority": 36,
+    "ipLocation": "Toronto, Canada",
+    "timestamp": "2026-09-25T11:25:45.140Z",
+    "emailCaptured": "s.jenkins@purebotanicals.ca"
+  },
+  {
+    "id": "AUD-10917",
+    "domain": "desertpulseadventures.ae",
+    "score": 61,
+    "monthlyTraffic": 19800,
+    "domainAuthority": 28,
+    "ipLocation": "Abu Dhabi, UAE",
+    "timestamp": "2026-09-23T04:30:45.140Z",
+    "emailCaptured": "karim@desertpulseadventures.ae"
+  }
+]

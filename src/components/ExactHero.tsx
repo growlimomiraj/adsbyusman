@@ -197,61 +197,24 @@ export const ExactHero: React.FC<ExactHeroProps> = ({
                 </div>
               </div>
 
-              {/* High-End Executive Portrait Presentation */}
-              <div className="relative shrink-0 z-10 w-full flex justify-center">
+              {/* High-End Executive Portrait Presentation with Sticky Presence */}
+              <div className="shrink-0 z-10 w-full flex justify-center sticky top-24 self-start">
                 {/* Ambient glow behind portrait */}
-                <div className="absolute -inset-2 bg-gradient-to-tr from-[#f25f22]/30 via-orange-200/40 to-blue-200/40 rounded-3xl blur-lg opacity-80" />
+                <div className="absolute -inset-2 bg-gradient-to-tr from-[#f25f22]/30 via-orange-200/40 to-blue-200/40 rounded-3xl blur-lg opacity-80 pointer-events-none" />
 
-                {/* Portrait Frame Container */}
-                <div 
-                  className="relative w-72 sm:w-84 md:w-96 h-96 sm:h-[420px] rounded-3xl overflow-hidden bg-slate-900 border-2 border-slate-200/90 shadow-2xl flex flex-col justify-end group cursor-pointer"
-                  onClick={() => {
-                    const input = document.getElementById("usman-photo-picker");
-                    if (input) input.click();
-                  }}
-                  title="Click anywhere to load your Google office picture"
-                >
-                  {/* Hidden picker */}
-                  <input
-                    id="usman-photo-picker"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          const base64Url = event.target?.result as string;
-                          if (base64Url) {
-                            try {
-                              const saved = localStorage.getItem("growlimo_profile_config");
-                              const curr = saved ? JSON.parse(saved) : { ...profile };
-                              curr.avatarUrl = base64Url;
-                              localStorage.setItem("growlimo_profile_config", JSON.stringify(curr));
-                              window.dispatchEvent(new Event("storage"));
-                              window.location.reload();
-                            } catch (err) {
-                              console.error(err);
-                            }
-                          }
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                  />
-
+                {/* Portrait Frame Container: Static, Locked, and Unchangeable */}
+                <div className="relative w-72 sm:w-84 md:w-96 h-[440px] sm:h-[490px] rounded-3xl overflow-hidden bg-slate-900 border-2 border-slate-200/90 shadow-2xl flex flex-col justify-end select-none pointer-events-none">
                   {/* Muhammad Usman Photo with High-Definition Rendering */}
                   <img
                     src={profile.avatarUrl || "/usman.png"}
-                    alt={profile.name}
+                    alt="Muhammad Usman"
                     loading="eager"
                     decoding="async"
                     style={{
                       imageRendering: "crisp-edges",
-                      filter: "contrast(1.05) brightness(1.03) saturate(1.05)",
+                      filter: "contrast(1.04) brightness(1.02)",
                     }}
-                    className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="absolute inset-0 w-full h-full object-cover object-center"
                     onError={(e) => {
                       e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
                     }}
@@ -265,7 +228,7 @@ export const ExactHero: React.FC<ExactHeroProps> = ({
                   </div>
 
                   {/* Gradient shadow overlay for legibility */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/25 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/20 to-transparent pointer-events-none" />
 
                   {/* Executive Nameplate Bar */}
                   <div className="relative z-20 m-3.5 sm:m-4 p-3 sm:p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-white/60 shadow-xl flex items-center justify-between pointer-events-none text-left">

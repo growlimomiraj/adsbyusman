@@ -18,33 +18,55 @@ export const GrowlimoAgencyPage: React.FC<GrowlimoAgencyPageProps> = ({
   const [formGoal, setFormGoal] = useState("Enterprise SEO & Organic Growth");
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const handleProposalSubmit = (e: React.FormEvent) => {
+  const handleProposalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formUrl.trim()) return;
 
+    const cleanUrl = formUrl.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
+    const newLead = {
+      id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+      name: `Prospect (${cleanUrl})`,
+      email: `partner@${cleanUrl}`,
+      website: cleanUrl,
+      revenue: "$1M - $5M / yr",
+      budget: formBudget,
+      goal: formGoal,
+      source: "Growlimo Proposal Card",
+      status: "New" as const,
+      score: 93,
+      dealValueEst: formBudget.includes("75k") ? 75000 : formBudget.includes("25k") ? 35000 : 15000,
+      notes: "Direct high-intent agency proposal request from Growlimo Agency Page.",
+      createdAt: new Date().toISOString(),
+      country: "United Arab Emirates",
+    };
+
+    // Save to local cache
     try {
-      const cleanUrl = formUrl.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
-      const newLead = {
-        id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
-        name: `Prospect (${cleanUrl})`,
-        email: `partner@${cleanUrl}`,
-        website: cleanUrl,
-        revenue: "$1M - $5M / yr",
-        budget: formBudget,
-        goal: formGoal,
-        source: "Growlimo Proposal Card",
-        status: "New",
-        score: 93,
-        dealValueEst: formBudget.includes("75k") ? 75000 : formBudget.includes("25k") ? 35000 : 15000,
-        notes: "Direct high-intent agency proposal request from Growlimo Agency Page.",
-        createdAt: new Date().toISOString(),
-        country: "United Arab Emirates",
-      };
       const existing = localStorage.getItem("growlimo_portal_leads");
       const currentList = existing ? JSON.parse(existing) : [];
       localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLead, ...currentList]));
+      window.dispatchEvent(new Event("storage"));
     } catch (err) {
       console.warn("Could not save to portal", err);
+    }
+
+    // Post to server backend so admin portal receives it
+    try {
+      await fetch("/api/lead-submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newLead.name,
+          email: newLead.email,
+          website: newLead.website,
+          revenue: newLead.revenue,
+          budget: newLead.budget,
+          goal: newLead.goal,
+          source: newLead.source,
+        }),
+      });
+    } catch (apiErr) {
+      console.warn("API lead-submit fallback:", apiErr);
     }
 
     setFormSubmitted(true);

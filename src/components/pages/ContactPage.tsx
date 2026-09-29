@@ -17,34 +17,57 @@ export const ContactPage: React.FC<ContactPageProps> = ({ profile, onNavigate })
   const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!website || !email) return;
 
+    const cleanUrl = website.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
+    const newLead = {
+      id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
+      name: name || `Prospect (${cleanUrl})`,
+      email,
+      phone: phone || "",
+      website: cleanUrl,
+      revenue: "$1M - $5M / yr",
+      budget,
+      goal,
+      source: "Contact / Work With Us Page",
+      status: "New" as const,
+      score: 95,
+      dealValueEst: budget.includes("25,000") ? 35000 : 15000,
+      notes: notes || "Direct strategic inquiry from Work With Us contact page.",
+      createdAt: new Date().toISOString(),
+      country: "United Arab Emirates",
+    };
+
+    // Save to local cache
     try {
-      const cleanUrl = website.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0].toLowerCase().trim();
-      const newLead = {
-        id: `LD-${Math.floor(10000 + Math.random() * 90000)}`,
-        name: name || `Prospect (${cleanUrl})`,
-        email,
-        phone: phone || "",
-        website: cleanUrl,
-        revenue: "$1M - $5M / yr",
-        budget,
-        goal,
-        source: "Contact / Work With Us Page",
-        status: "New",
-        score: 95,
-        dealValueEst: budget.includes("25,000") ? 35000 : 15000,
-        notes: notes || "Direct strategic inquiry from Work With Us contact page.",
-        createdAt: new Date().toISOString(),
-        country: "United Arab Emirates",
-      };
       const existing = localStorage.getItem("growlimo_portal_leads");
       const currentList = existing ? JSON.parse(existing) : [];
       localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLead, ...currentList]));
+      window.dispatchEvent(new Event("storage"));
     } catch (err) {
       console.warn("Could not save to portal", err);
+    }
+
+    // Post to server backend so admin portal receives it across devices
+    try {
+      await fetch("/api/lead-submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newLead.name,
+          email: newLead.email,
+          phone: newLead.phone,
+          website: newLead.website,
+          revenue: newLead.revenue,
+          budget: newLead.budget,
+          goal: newLead.goal,
+          source: newLead.source,
+        }),
+      });
+    } catch (apiErr) {
+      console.warn("API lead-submit error:", apiErr);
     }
 
     setSubmitted(true);

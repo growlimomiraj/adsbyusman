@@ -83,6 +83,7 @@ export const AuditOrderModal: React.FC<AuditOrderModalProps> = ({
         const existing = localStorage.getItem("growlimo_portal_leads");
         const currentList = existing ? JSON.parse(existing) : [];
         localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLead, ...currentList]));
+        window.dispatchEvent(new Event("storage"));
       } catch (e) {
         console.warn("Could not save audit to portal leads", e);
       }

@@ -98,16 +98,14 @@ export default function App() {
     localStorage.setItem("growlimo_profile_config", JSON.stringify(newProfile));
   };
 
-  // Sync with storage events from direct photo changes
+  // Sync with storage events when photo is added
   useEffect(() => {
     const handleStorageChange = () => {
       const saved = localStorage.getItem("growlimo_profile_config");
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (parsed.avatarUrl) {
-            setProfile(parsed);
-          }
+          setProfile(parsed);
         } catch (e) {}
       }
     };

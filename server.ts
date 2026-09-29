@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import {
@@ -16,7 +17,8 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Lazy Gemini AI initialization
 function getGeminiAI() {
@@ -308,11 +310,37 @@ Respond in JSON matching the exact schema.`;
       actionPlan: Array.isArray(parsed.actionPlan) && parsed.actionPlan.length ? parsed.actionPlan : fallback.actionPlan,
     };
 
+    // Record audit into persistent audit log
+    try {
+      addAudit({
+        id: `AUD-${Math.floor(10000 + Math.random() * 90000)}`,
+        domain,
+        score: merged.overallScore,
+        monthlyTraffic: merged.metrics?.organicMonthlyTraffic || 15000,
+        domainAuthority: merged.metrics?.domainAuthority || 35,
+        ipLocation: "Global Inbound Scan",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (auditErr) {
+      console.warn("Failed to record audit log:", auditErr);
+    }
+
     res.json(merged);
   } catch (err: any) {
     console.error("Error in /api/analyze-site:", err);
     // Graceful fallback so user always gets the full Neil Patel audit experience
     const fallback = generateFallbackAudit(req.body.url || "example.com");
+    try {
+      addAudit({
+        id: `AUD-${Math.floor(10000 + Math.random() * 90000)}`,
+        domain: fallback.domain,
+        score: fallback.overallScore,
+        monthlyTraffic: fallback.metrics.organicMonthlyTraffic,
+        domainAuthority: fallback.metrics.domainAuthority,
+        ipLocation: "Inbound Visitor Scan",
+        timestamp: new Date().toISOString(),
+      });
+    } catch {}
     res.json(fallback);
   }
 });
@@ -886,6 +914,41 @@ app.get("/api/admin/audits", (_req, res) => {
   } catch (err) {
     console.error("Error reading audits:", err);
     res.status(500).json({ error: "Failed to read audits" });
+  }
+});
+
+// Upload & permanently lock Muhammad Usman's photo to public/usman.png on disk
+app.post("/api/upload-usman-photo", (req, res) => {
+  try {
+    const { imageBase64 } = req.body;
+    if (!imageBase64 || typeof imageBase64 !== "string") {
+      return res.status(400).json({ error: "Missing or invalid imageBase64 data" });
+    }
+
+    // Strip data prefix (e.g. data:image/jpeg;base64,)
+    const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64Data, "base64");
+
+    const publicPath = path.join(process.cwd(), "public", "usman.png");
+    fs.writeFileSync(publicPath, buffer);
+
+    const publicHqPath = path.join(process.cwd(), "public", "usman_hq.png");
+    fs.writeFileSync(publicHqPath, buffer);
+
+    // Also write to dist if it exists
+    const distPath = path.join(process.cwd(), "dist", "usman.png");
+    if (fs.existsSync(path.dirname(distPath))) {
+      try {
+        fs.writeFileSync(distPath, buffer);
+      } catch (e) {
+        console.error("Could not write to dist/usman.png", e);
+      }
+    }
+
+    res.json({ success: true, message: "Muhammad Usman official photo permanently written to disk." });
+  } catch (err: any) {
+    console.error("Failed to write photo to disk:", err);
+    res.status(500).json({ error: err.message || "Failed to save photo" });
   }
 });
 

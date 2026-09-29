@@ -177,10 +177,20 @@ export const ExactFooter: React.FC<ExactFooterProps> = ({
               </label>
             </div>
 
-            {/* Copyright Guarantee */}
-            <div className="pt-2 text-xs text-white/75 font-normal flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-orange-200" />
-              <span>© {new Date().getFullYear()} {leaderName} &amp; Growlimo, LLC. All rights reserved.</span>
+            {/* Copyright Guarantee & Discreet Admin Portal Link */}
+            <div className="pt-2 text-xs text-white/75 font-normal flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-orange-200" />
+                <span>© {new Date().getFullYear()} {leaderName} &amp; Growlimo, LLC. All rights reserved.</span>
+              </div>
+              <span className="text-white/40 hidden sm:inline">•</span>
+              <a
+                href="#admin"
+                className="text-white/70 hover:text-white underline decoration-white/30 text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                title="Muhammad Usman's Executive Admin Portal"
+              >
+                <span>Executive Admin</span>
+              </a>
             </div>
           </div>
 

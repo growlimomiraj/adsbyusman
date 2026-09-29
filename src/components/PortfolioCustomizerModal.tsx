@@ -162,19 +162,19 @@ export const PortfolioCustomizerModal: React.FC<PortfolioCustomizerModalProps> =
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-xs font-bold text-slate-700">
-                Executive Profile Photo (Muhammad Usman)
+                Muhammad Usman Sticky Photo (Official Google Office)
               </label>
               <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
-                1-Click Upload
+                Permanent Disk Replacement
               </span>
             </div>
 
-            {/* Live Preview & Direct File Picker */}
-            <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl mb-2">
+            {/* Permanent Photo Preview & 1-Click Replace */}
+            <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#f25f22] bg-slate-900 shrink-0 shadow-xs">
                 <img
-                  src={formData.avatarUrl || "/usman.png"}
-                  alt="Preview"
+                  src={`/usman.png?t=${Date.now()}`}
+                  alt="Muhammad Usman"
                   className="w-full h-full object-cover object-top"
                   onError={(e) => {
                     e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
@@ -182,20 +182,31 @@ export const PortfolioCustomizerModal: React.FC<PortfolioCustomizerModalProps> =
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-orange-50 border border-slate-300 hover:border-[#f25f22] text-[#f25f22] text-xs font-bold rounded-lg cursor-pointer transition-colors shadow-2xs">
-                  <span>Choose Photo File...</span>
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f25f22] hover:bg-[#d94e16] text-white text-xs font-bold rounded-lg cursor-pointer transition-colors shadow-xs">
+                  <span>Replace With Your Google Office Photo...</span>
                   <input
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
                         const reader = new FileReader();
-                        reader.onload = (event) => {
+                        reader.onload = async (event) => {
                           const base64Url = event.target?.result as string;
                           if (base64Url) {
-                            setFormData((prev) => ({ ...prev, avatarUrl: base64Url }));
+                            try {
+                              const res = await fetch("/api/upload-usman-photo", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ imageBase64: base64Url }),
+                              });
+                              if (res.ok) {
+                                window.location.reload();
+                              }
+                            } catch (err) {
+                              console.error("Failed to upload photo", err);
+                            }
                           }
                         };
                         reader.readAsDataURL(file);
@@ -204,19 +215,10 @@ export const PortfolioCustomizerModal: React.FC<PortfolioCustomizerModalProps> =
                   />
                 </label>
                 <p className="text-[10px] text-slate-500 mt-1">
-                  Upload your photo (JPG, PNG, WebP). Instantly replaces the photo across the hero, about page, and agency banner.
+                  Click above to choose your IMG_1655 image. It will permanently replace /usman.png on the server and reload.
                 </p>
               </div>
             </div>
-
-            <input
-              type="text"
-              required
-              value={formData.avatarUrl}
-              onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
-              placeholder="Or enter image URL (https://...)"
-              className="w-full px-3 py-1.5 text-xs font-mono rounded-xl border border-slate-200 bg-white text-slate-700 focus:border-orange-500 focus:ring-1 focus:ring-orange-200 outline-none truncate"
-            />
           </div>
 
           <div className="pt-4 flex items-center justify-between gap-3">

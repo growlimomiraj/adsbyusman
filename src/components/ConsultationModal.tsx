@@ -61,6 +61,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
       const existing = localStorage.getItem("growlimo_portal_leads");
       const currentList = existing ? JSON.parse(existing) : [];
       localStorage.setItem("growlimo_portal_leads", JSON.stringify([newLeadObj, ...currentList]));
+      window.dispatchEvent(new Event("storage"));
     } catch (saveErr) {
       console.warn("Could not save to portal leads", saveErr);
     }
