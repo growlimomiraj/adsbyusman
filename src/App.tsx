@@ -30,7 +30,11 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         if (parsed.name) {
-          return parsed;
+          // Ensure avatar points to the official Google office photo
+          return {
+            ...parsed,
+            avatarUrl: "/usman_google.jpg",
+          };
         }
       } catch (e) {
         return defaultProfile;

@@ -173,11 +173,11 @@ export const PortfolioCustomizerModal: React.FC<PortfolioCustomizerModalProps> =
             <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#f25f22] bg-slate-900 shrink-0 shadow-xs">
                 <img
-                  src={`/usman.png?t=${Date.now()}`}
+                  src={`/usman_google.jpg?t=${Date.now()}`}
                   alt="Muhammad Usman"
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-[center_20%]"
                   onError={(e) => {
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
+                    e.currentTarget.src = "/usman.png";
                   }}
                 />
               </div>

@@ -6,7 +6,7 @@ export const defaultProfile: ProfileConfig = {
   title: "Founder & Chief Growth Officer",
   email: "contact@growlimo.com",
   phone: "+1 (800) 555-0199",
-  avatarUrl: "/usman.png",
+  avatarUrl: "/usman_google.jpg",
   tagline: "Helping companies generate millions of visitors and turn clicks into predictable revenue.",
 };
 

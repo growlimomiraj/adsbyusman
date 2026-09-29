@@ -206,19 +206,18 @@ export const ExactHero: React.FC<ExactHeroProps> = ({
                 <div className="relative w-72 sm:w-84 md:w-96 h-[440px] sm:h-[490px] rounded-3xl overflow-hidden bg-slate-900 border-2 border-slate-200/90 shadow-2xl flex flex-col justify-end select-none pointer-events-none">
                   {/* Muhammad Usman Photo with High-Definition Rendering */}
                   <img
-                    src={profile.avatarUrl || "/usman.png"}
+                    src="/usman_google.jpg"
                     alt="Muhammad Usman"
                     loading="eager"
                     decoding="async"
                     style={{
                       imageRendering: "crisp-edges",
-                      filter: "contrast(1.04) brightness(1.02)",
+                      filter: "contrast(1.03) brightness(1.01)",
                     }}
-                    className="absolute inset-0 w-full h-full object-cover object-center"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_20%]"
                     onError={(e) => {
-                      e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
+                      e.currentTarget.src = "/usman.png";
                     }}
-                    referrerPolicy="no-referrer"
                   />
 
                   {/* Subtle Google Partner Badge */}
