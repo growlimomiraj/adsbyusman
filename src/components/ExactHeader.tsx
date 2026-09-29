@@ -15,6 +15,7 @@ export const ExactHeader: React.FC<ExactHeaderProps> = ({
   currentPage,
   onNavigate,
   onOpenConsultation,
+  onOpenCustomizer,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("EN");
@@ -106,7 +107,7 @@ export const ExactHeader: React.FC<ExactHeaderProps> = ({
             {/* Orange CTA Button: Work With Us */}
             <button
               onClick={onOpenConsultation}
-              className="ml-3 px-5 py-2.5 bg-[#f25f22] hover:bg-[#d94e14] text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer whitespace-nowrap"
+              className="ml-2 px-5 py-2.5 bg-[#f25f22] hover:bg-[#d94e14] text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer whitespace-nowrap"
             >
               Work With Us
             </button>

@@ -20,13 +20,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           <div className="lg:col-span-5 relative">
             <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 relative">
               <img
-                src={profile.avatarUrl}
+                src={profile.avatarUrl || "/usman.png"}
                 alt={profile.name}
                 className="w-full h-[450px] sm:h-[500px] object-cover object-top"
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
+                }}
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+
+              <div className="absolute bottom-6 left-6 right-6 text-white pointer-events-none">
                 <p className="text-xl font-black">{profile.name}</p>
                 <p className="text-orange-400 text-xs font-semibold">
                   {profile.title}

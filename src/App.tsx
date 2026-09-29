@@ -95,8 +95,25 @@ export default function App() {
   // Save profile updates to localStorage
   const handleSaveProfile = (newProfile: ProfileConfig) => {
     setProfile(newProfile);
-    localStorage.setItem("np_profile_config", JSON.stringify(newProfile));
+    localStorage.setItem("growlimo_profile_config", JSON.stringify(newProfile));
   };
+
+  // Sync with storage events from direct photo changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem("growlimo_profile_config");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.avatarUrl) {
+            setProfile(parsed);
+          }
+        } catch (e) {}
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   // Scroll to hero input when "Free Audit" is clicked
   const handleFocusAudit = () => {
@@ -151,6 +168,7 @@ export default function App() {
         currentPage={currentPage}
         onNavigate={handleNavigate}
         onOpenConsultation={() => setIsConsultationOpen(true)}
+        onOpenCustomizer={() => setIsCustomizerOpen(true)}
       />
 
       <main className="flex-1">

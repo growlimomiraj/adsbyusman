@@ -102,20 +102,27 @@ export const AboutPage: React.FC<AboutPageProps> = ({ profile, onNavigate, onOpe
             </div>
 
             <div className="md:col-span-5 flex justify-center">
-              <div className="relative w-64 sm:w-72">
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#f25f22]/20 to-orange-100 rounded-3xl -rotate-3" />
-                <div className="relative bg-white border-2 border-orange-200/80 rounded-3xl p-3 shadow-xl">
-                  <img
-                    src="/usman.png"
-                    alt="Muhammad Usman"
-                    className="w-full h-auto object-contain rounded-2xl drop-shadow-md"
-                    onError={(e) => {
-                      e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
-                    }}
-                  />
+              <div className="relative w-64 sm:w-80">
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#f25f22]/30 via-orange-100 to-amber-100 rounded-3xl -rotate-2 scale-102" />
+                <div className="relative bg-white border-2 border-orange-200/90 rounded-3xl p-4 shadow-2xl group">
+                  <div className="relative h-80 sm:h-96 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner">
+                    <img
+                      src={profile.avatarUrl || "/usman.png"}
+                      alt="Muhammad Usman"
+                      className="w-full h-full object-cover object-top"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+                  </div>
+
                   <div className="text-center pt-3 pb-1">
-                    <div className="font-black text-slate-900 text-base uppercase tracking-tight">Muhammad Usman</div>
-                    <div className="text-xs text-[#f25f22] font-bold">Founder, Growlimo</div>
+                    <div className="font-black text-slate-900 text-lg uppercase tracking-tight flex items-center justify-center gap-1.5">
+                      <span>Muhammad Usman</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" title="Active"></span>
+                    </div>
+                    <div className="text-xs text-[#f25f22] font-bold tracking-wide">Founder & Chief Growth Officer, Growlimo</div>
                   </div>
                 </div>
               </div>

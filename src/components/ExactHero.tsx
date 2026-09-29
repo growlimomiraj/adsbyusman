@@ -153,61 +153,157 @@ export const ExactHero: React.FC<ExactHeroProps> = ({
             <p>Colombia • Mexico</p>
           </div>
 
-          {/* Growlimo Agency Banner + Muhammad Usman Photo Collage with curved stage floor */}
-          <div className="relative w-full mx-auto pt-2 pb-0 overflow-hidden">
-            {/* The side-by-side arrangement: [GL] GROWLIMO on left, Muhammad Usman on right */}
-            <div className="relative z-10 flex items-end justify-between px-2 sm:px-4">
-              {/* Left: [GL] GROWLIMO logo */}
-              <div className="flex items-center gap-2.5 sm:gap-3 pb-8 sm:pb-12">
-                <div className="w-14 sm:w-16 h-14 sm:h-16 border-[3px] border-[#f25f22] rounded-lg flex items-center justify-center bg-white shadow-xs">
-                  <span className="text-[#f25f22] font-black text-2xl sm:text-3xl tracking-tighter">GL</span>
+          {/* Growlimo Agency Executive Showcase - Unified Mobile & Desktop Centered Stacked Layout */}
+          <div className="relative w-full max-w-2xl mx-auto my-6 overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white via-[#fbfcfe] to-[#f4f7fa] shadow-xl">
+            {/* Subtle top accent line */}
+            <div className="h-1.5 w-full bg-gradient-to-r from-[#f25f22] via-[#ff783e] to-[#3b7cb5]" />
+
+            <div className="relative px-6 sm:px-10 py-8 sm:py-10 flex flex-col items-center text-center gap-8">
+              
+              {/* Brand Identity & Executive Title */}
+              <div className="flex flex-col items-center z-10 space-y-4 w-full">
+                {/* Brandmark Header */}
+                <div className="flex items-center justify-center gap-3.5">
+                  {/* High-definition rounded brand logo */}
+                  <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-2xl border-[3.5px] border-[#f25f22] flex items-center justify-center bg-white shadow-md shadow-orange-500/10 shrink-0">
+                    <span className="text-[#f25f22] font-black text-xl sm:text-2xl tracking-tight select-none">
+                      GL
+                    </span>
+                  </div>
+
+                  {/* Brand Typography */}
+                  <div className="flex flex-col text-left select-none">
+                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 uppercase leading-none font-sans">
+                      GROWLIMO
+                    </h2>
+                    <span className="text-[10px] sm:text-[11px] font-extrabold tracking-[0.22em] text-[#3b7cb5] uppercase mt-1 leading-none">
+                      PERFORMANCE AGENCY
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-black tracking-tight text-[#222222] uppercase">
-                    GROWLIMO
-                  </span>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-widest -mt-1">
-                    Performance Agency
-                  </span>
+
+                {/* Executive Bio & Agency Mission */}
+                <div className="space-y-2 max-w-lg mx-auto">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50/80 border border-orange-200/60 text-[#f25f22] text-xs font-bold">
+                    <span className="w-2 h-2 rounded-full bg-[#f25f22] animate-pulse"></span>
+                    <span>Executive Leadership</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-snug">
+                    Muhammad Usman
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                    Founder &amp; Chief Growth Officer directing global search acquisition, high-ROI paid media infrastructure, and enterprise revenue growth for world-class brands.
+                  </p>
                 </div>
               </div>
 
-              {/* Right: Executive standing cutout */}
-              <div className="relative w-36 sm:w-44 shrink-0 -mb-2">
-                <img
-                  src={profile.avatarUrl || "/usman.png"}
-                  alt={profile.name}
-                  className="w-full h-auto object-contain drop-shadow-md"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
+              {/* High-End Executive Portrait Presentation */}
+              <div className="relative shrink-0 z-10 w-full flex justify-center">
+                {/* Ambient glow behind portrait */}
+                <div className="absolute -inset-2 bg-gradient-to-tr from-[#f25f22]/30 via-orange-200/40 to-blue-200/40 rounded-3xl blur-lg opacity-80" />
+
+                {/* Portrait Frame Container */}
+                <div 
+                  className="relative w-72 sm:w-84 md:w-96 h-96 sm:h-[420px] rounded-3xl overflow-hidden bg-slate-900 border-2 border-slate-200/90 shadow-2xl flex flex-col justify-end group cursor-pointer"
+                  onClick={() => {
+                    const input = document.getElementById("usman-photo-picker");
+                    if (input) input.click();
                   }}
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-            </div>
+                  title="Click anywhere to load your Google office picture"
+                >
+                  {/* Hidden picker */}
+                  <input
+                    id="usman-photo-picker"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          const base64Url = event.target?.result as string;
+                          if (base64Url) {
+                            try {
+                              const saved = localStorage.getItem("growlimo_profile_config");
+                              const curr = saved ? JSON.parse(saved) : { ...profile };
+                              curr.avatarUrl = base64Url;
+                              localStorage.setItem("growlimo_profile_config", JSON.stringify(curr));
+                              window.dispatchEvent(new Event("storage"));
+                              window.location.reload();
+                            } catch (err) {
+                              console.error(err);
+                            }
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
 
-            {/* Accolade ribbons beneath photo on curved floor matching screan2.PNG */}
-            <div className="relative z-10 w-full pt-4 pb-2 border-t border-slate-200/80 flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-black tracking-wider uppercase px-1">
-              <div className="flex flex-col items-center">
-                <span className="font-black text-slate-600 text-[11px]">ADWEEK</span>
-                <span className="text-[7px] text-slate-400 -mt-0.5">FASTEST GROWING</span>
+                  {/* Muhammad Usman Photo with High-Definition Rendering */}
+                  <img
+                    src={profile.avatarUrl || "/usman.png"}
+                    alt={profile.name}
+                    loading="eager"
+                    decoding="async"
+                    style={{
+                      imageRendering: "crisp-edges",
+                      filter: "contrast(1.05) brightness(1.03) saturate(1.05)",
+                    }}
+                    className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80";
+                    }}
+                    referrerPolicy="no-referrer"
+                  />
+
+                  {/* Subtle Google Partner Badge */}
+                  <div className="absolute top-4 right-4 z-20 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold flex items-center gap-1.5 shadow-lg select-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                    <span>Google Certified</span>
+                  </div>
+
+                  {/* Gradient shadow overlay for legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/25 to-transparent pointer-events-none" />
+
+                  {/* Executive Nameplate Bar */}
+                  <div className="relative z-20 m-3.5 sm:m-4 p-3 sm:p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-white/60 shadow-xl flex items-center justify-between pointer-events-none text-left">
+                    <div>
+                      <div className="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-tight leading-tight">
+                        Muhammad Usman
+                      </div>
+                      <div className="text-[10px] sm:text-[11px] font-bold text-[#f25f22] tracking-wide mt-0.5 leading-tight">
+                        Founder &amp; Chief Growth Officer
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 pl-2.5 border-l border-slate-200">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">Active</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-[8px] text-slate-600 font-bold text-center leading-tight">
-                AOY
+
+              {/* Key Executive Credibility Metrics in Unified Grid */}
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-4 pt-2 w-full max-w-lg border-t border-slate-200/70">
+                <div className="bg-white/80 border border-slate-200/60 rounded-xl p-2.5 sm:p-3 text-center shadow-xs">
+                  <div className="text-base sm:text-xl font-black text-slate-900">100M+</div>
+                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Organic Clicks</div>
+                </div>
+                <div className="bg-white/80 border border-slate-200/60 rounded-xl p-2.5 sm:p-3 text-center shadow-xs">
+                  <div className="text-base sm:text-xl font-black text-[#f25f22]">$45M+</div>
+                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Revenue Built</div>
+                </div>
+                <div className="bg-white/80 border border-slate-200/60 rounded-xl p-2.5 sm:p-3 text-center shadow-xs">
+                  <div className="text-base sm:text-xl font-black text-[#3b7cb5]">18+</div>
+                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Global Markets</div>
+                </div>
               </div>
-              <div className="flex flex-col items-center">
-                <span className="text-[8px] text-slate-400 leading-none">Inc.</span>
-                <span className="font-bold text-slate-600 text-[9px] leading-none mt-0.5">Best Workplaces</span>
-              </div>
-              <div className="font-serif italic font-bold text-xs text-slate-700">
-                OMMA
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="text-[8px] text-slate-400 leading-none">Inc.</span>
-                <span className="font-black text-slate-700 text-[10px] leading-none mt-0.5">500</span>
-              </div>
+
             </div>
           </div>
+
         </div>
       </div>
     </section>

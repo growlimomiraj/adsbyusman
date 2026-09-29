@@ -889,6 +889,27 @@ app.get("/api/admin/audits", (_req, res) => {
   }
 });
 
+// Explicit favicon handlers for browsers and search crawlers requesting root /favicon.ico
+app.get("/favicon.ico", (_req, res) => {
+  const icoPath = path.join(process.cwd(), "public", "favicon.ico");
+  res.sendFile(icoPath);
+});
+
+app.get("/favicon.png", (_req, res) => {
+  const pngPath = path.join(process.cwd(), "public", "favicon.png");
+  res.sendFile(pngPath);
+});
+
+app.get("/favicon-32x32.png", (_req, res) => {
+  const pngPath = path.join(process.cwd(), "public", "favicon-32x32.png");
+  res.sendFile(pngPath);
+});
+
+app.get("/favicon.svg", (_req, res) => {
+  const svgPath = path.join(process.cwd(), "public", "favicon.svg");
+  res.sendFile(svgPath);
+});
+
 // Vite middleware for development, static serve for production
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
