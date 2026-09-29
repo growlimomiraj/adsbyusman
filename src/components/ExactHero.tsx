@@ -203,43 +203,7 @@ export const ExactHero: React.FC<ExactHeroProps> = ({
                 <div className="absolute -inset-2 bg-gradient-to-tr from-[#f25f22]/30 via-orange-200/40 to-blue-200/40 rounded-3xl blur-lg opacity-80 pointer-events-none" />
 
                 {/* Portrait Frame Container: Static, Locked, and Unchangeable */}
-                <div className="relative w-72 sm:w-84 md:w-96 h-[440px] sm:h-[490px] rounded-3xl overflow-hidden bg-slate-900 border-2 border-slate-200/90 shadow-2xl flex flex-col justify-end select-none group">
-                  {/* Hidden file input specifically to load your Google office image */}
-                  <input
-                    id="hero-photo-direct-upload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onload = async (event) => {
-                          const base64Url = event.target?.result as string;
-                          if (base64Url) {
-                            try {
-                              await fetch("/api/upload-usman-photo", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ imageBase64: base64Url }),
-                              });
-                            } catch (err) {
-                              console.error(err);
-                            }
-                            try {
-                              const saved = localStorage.getItem("growlimo_profile_config");
-                              const curr = saved ? JSON.parse(saved) : {};
-                              curr.avatarUrl = base64Url;
-                              localStorage.setItem("growlimo_profile_config", JSON.stringify(curr));
-                            } catch (err) {}
-                            window.location.reload();
-                          }
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                  />
-
+                <div className="relative w-72 sm:w-84 md:w-96 h-[440px] sm:h-[490px] rounded-3xl overflow-hidden bg-slate-900 border-2 border-slate-200/90 shadow-2xl flex flex-col justify-end select-none pointer-events-none">
                   {/* Muhammad Usman Photo with High-Definition Rendering */}
                   <img
                     src={profile.avatarUrl || "/usman.png"}
@@ -256,20 +220,6 @@ export const ExactHero: React.FC<ExactHeroProps> = ({
                     }}
                     referrerPolicy="no-referrer"
                   />
-
-                  {/* Clean, subtle photo update button in top-left */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const el = document.getElementById("hero-photo-direct-upload");
-                      if (el) el.click();
-                    }}
-                    className="absolute top-4 left-4 z-20 px-3 py-1.5 rounded-full bg-slate-900/85 hover:bg-slate-900 text-white text-[11px] font-bold border border-white/20 hover:border-[#f25f22] backdrop-blur-md shadow-lg flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
-                    title="Click to select your photo file"
-                  >
-                    <span>📷</span>
-                    <span>Upload Your Photo</span>
-                  </button>
 
                   {/* Subtle Google Partner Badge */}
                   <div className="absolute top-4 right-4 z-20 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold flex items-center gap-1.5 shadow-lg select-none">
