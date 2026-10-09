@@ -1,95 +1,148 @@
 import React, { useState } from "react";
+import { ExternalLink, Globe, Sparkles } from "lucide-react";
 import worldPath from "../world-path.json";
 
-interface PinLocation {
+export interface ClientBrand {
+  id: string;
+  name: string;
+  domain: string;
+  url: string;
   city: string;
   country: string;
+  category: string;
+  tagline: string;
   x: number;
   y: number;
 }
 
-const PIN_LOCATIONS: PinLocation[] = [
-  // North America - West Coast
-  { city: "Vancouver / Seattle", country: "Canada / US", x: 360, y: 195 },
-  { city: "San Francisco", country: "United States", x: 350, y: 245 },
-  { city: "Los Angeles", country: "United States", x: 375, y: 275 },
-  { city: "San Diego / Tijuana", country: "US / Mexico", x: 390, y: 295 },
-
-  // North America - Central & Mountain
-  { city: "Calgary / Edmonton", country: "Canada", x: 410, y: 180 },
-  { city: "Denver", country: "United States", x: 435, y: 250 },
-  { city: "Dallas / Austin", country: "United States", x: 470, y: 300 },
-  { city: "Chicago", country: "United States", x: 520, y: 235 },
-
-  // North America - East Coast & South
-  { city: "Toronto / Montreal", country: "Canada", x: 560, y: 205 },
-  { city: "Boston", country: "United States", x: 605, y: 205 },
-  { city: "New York", country: "United States", x: 595, y: 225 },
-  { city: "Washington, D.C.", country: "United States", x: 575, y: 245 },
-  { city: "Atlanta", country: "United States", x: 540, y: 280 },
-  { city: "Miami", country: "United States", x: 565, y: 335 },
-
-  // Latin America & Caribbean
-  { city: "Mexico City", country: "Mexico", x: 435, y: 350 },
-  { city: "Bogota", country: "Colombia", x: 585, y: 410 },
-  { city: "Lima", country: "Peru", x: 565, y: 495 },
-  { city: "Santiago", country: "Chile", x: 615, y: 690 },
-  { city: "Buenos Aires", country: "Argentina", x: 665, y: 700 },
-  { city: "Sao Paulo / Rio", country: "Brazil", x: 740, y: 575 },
-  { city: "Brasilia / Salvador", country: "Brazil", x: 770, y: 550 },
-
-  // Europe - UK & West
-  { city: "Dublin", country: "Ireland", x: 940, y: 175 },
-  { city: "London", country: "United Kingdom", x: 975, y: 180 },
-  { city: "Paris", country: "France", x: 1000, y: 205 },
-  { city: "Amsterdam", country: "Netherlands", x: 1020, y: 175 },
-  { city: "Brussels", country: "Belgium", x: 1005, y: 190 },
-
-  // Europe - Central & South
-  { city: "Berlin / Frankfurt", country: "Germany", x: 1050, y: 180 },
-  { city: "Madrid", country: "Spain", x: 960, y: 245 },
-  { city: "Lisbon", country: "Portugal", x: 925, y: 250 },
-  { city: "Milan / Rome", country: "Italy", x: 1055, y: 235 },
-  { city: "Warsaw", country: "Poland", x: 1105, y: 175 },
-  { city: "Bucharest / Athens", country: "SE Europe", x: 1140, y: 240 },
-
-  // Africa
-  { city: "Lagos", country: "Nigeria", x: 1010, y: 430 },
-  { city: "Nairobi", country: "Kenya", x: 1220, y: 480 },
-  { city: "Johannesburg", country: "South Africa", x: 1180, y: 680 },
-  { city: "Cape Town", country: "South Africa", x: 1140, y: 735 },
-
-  // Middle East & South Asia
-  { city: "Dubai", country: "United Arab Emirates", x: 1295, y: 345 },
-  { city: "Islamabad / Lahore", country: "Pakistan", x: 1380, y: 285 },
-  { city: "Karachi", country: "Pakistan", x: 1365, y: 330 },
-  { city: "New Delhi", country: "India", x: 1425, y: 305 },
-  { city: "Mumbai", country: "India", x: 1410, y: 360 },
-  { city: "Bangalore", country: "India", x: 1435, y: 415 },
-  { city: "Dhaka", country: "Bangladesh", x: 1495, y: 335 },
-
-  // East & Southeast Asia
-  { city: "Bangkok", country: "Thailand", x: 1515, y: 385 },
-  { city: "Ho Chi Minh City", country: "Vietnam", x: 1550, y: 415 },
-  { city: "Kuala Lumpur", country: "Malaysia", x: 1530, y: 460 },
-  { city: "Singapore", country: "Singapore", x: 1538, y: 472 },
-  { city: "Jakarta", country: "Indonesia", x: 1565, y: 515 },
-  { city: "Manila", country: "Philippines", x: 1635, y: 390 },
-  { city: "Hong Kong / Shenzhen", country: "China", x: 1565, y: 340 },
-  { city: "Shanghai", country: "China", x: 1600, y: 300 },
-  { city: "Tokyo", country: "Japan", x: 1715, y: 260 },
-
-  // Australia & New Zealand
-  { city: "Perth", country: "Australia", x: 1630, y: 695 },
-  { city: "Adelaide", country: "Australia", x: 1720, y: 715 },
-  { city: "Melbourne", country: "Australia", x: 1745, y: 750 },
-  { city: "Sydney", country: "Australia", x: 1775, y: 720 },
-  { city: "Brisbane", country: "Australia", x: 1785, y: 660 },
-  { city: "Auckland", country: "New Zealand", x: 1895, y: 770 },
+export const CLIENT_BRANDS: ClientBrand[] = [
+  {
+    id: "modernwallarts",
+    name: "Modern Wall Arts",
+    domain: "modernwallarts.com",
+    url: "https://modernwallarts.com/",
+    city: "Chicago",
+    country: "United States",
+    category: "Luxury E-Commerce",
+    tagline: "Contemporary & Custom Wall Art",
+    x: 515,
+    y: 240,
+  },
+  {
+    id: "thecarhaus",
+    name: "The Car Haus",
+    domain: "thecarhaus.com",
+    url: "https://www.thecarhaus.com/",
+    city: "Dallas, Texas",
+    country: "United States",
+    category: "Luxury Dealership",
+    tagline: "Pre-Owned Exotic & Luxury Vehicles",
+    x: 470,
+    y: 300,
+  },
+  {
+    id: "humanconcern",
+    name: "Human Concern International",
+    domain: "humanconcern.org",
+    url: "https://humanconcern.org/",
+    city: "Ottawa",
+    country: "Canada",
+    category: "Global NGO",
+    tagline: "Canada's Oldest Global Relief Organization",
+    x: 580,
+    y: 195,
+  },
+  {
+    id: "lalahijabs",
+    name: "Lala Hijabs",
+    domain: "lalahijabs.com",
+    url: "https://lalahijabs.com/",
+    city: "Toronto",
+    country: "Canada",
+    category: "DTC Modest Fashion",
+    tagline: "Global Direct-to-Consumer Modest Wear",
+    x: 555,
+    y: 210,
+  },
+  {
+    id: "servicemycar",
+    name: "Service My Car",
+    domain: "servicemycar.com",
+    url: "https://servicemycar.com/uae",
+    city: "Dubai & London",
+    country: "UAE / United Kingdom",
+    category: "Auto Tech & Servicing",
+    tagline: "Largest On-Demand Auto Servicing Network",
+    x: 1290,
+    y: 345,
+  },
+  {
+    id: "azcorealestate",
+    name: "AZCO Real Estate",
+    domain: "azcorealestate.ae",
+    url: "https://www.azcorealestate.ae/",
+    city: "Dubai",
+    country: "United Arab Emirates",
+    category: "Luxury Real Estate",
+    tagline: "Award-Winning Luxury Property Brokerage",
+    x: 1308,
+    y: 336,
+  },
+  {
+    id: "alhurrcarrental",
+    name: "Al Hurr Car Rental",
+    domain: "alhurrcarrental.ae",
+    url: "https://www.alhurrcarrental.ae/en",
+    city: "Dubai",
+    country: "United Arab Emirates",
+    category: "Fleet Mobility",
+    tagline: "Premium Car Rental & Fleet Management",
+    x: 1276,
+    y: 340,
+  },
+  {
+    id: "miragerentcar",
+    name: "Mirage Rent a Car",
+    domain: "miragerentcar.com",
+    url: "https://miragerentcar.com/",
+    city: "Dubai Marina",
+    country: "United Arab Emirates",
+    category: "Exotic Rentals",
+    tagline: "VIP Exotic & Supercar Rental Services",
+    x: 1290,
+    y: 358,
+  },
+  {
+    id: "onlytourism",
+    name: "Only Tourism",
+    domain: "onlytourism.com",
+    url: "https://onlytourism.com/",
+    city: "Dubai",
+    country: "United Arab Emirates",
+    category: "Destination Management",
+    tagline: "Exclusive UAE VIP Tourism & Tours",
+    x: 1305,
+    y: 354,
+  },
+  {
+    id: "mmcdubai",
+    name: "MMC Dubai",
+    domain: "mmcdubai.ae",
+    url: "https://mmcdubai.ae/",
+    city: "Business Bay, Dubai",
+    country: "United Arab Emirates",
+    category: "Corporate Advisory",
+    tagline: "Corporate & Management Consulting",
+    x: 1318,
+    y: 346,
+  },
 ];
 
 export const ExactBrandSection: React.FC = () => {
-  const [activePin, setActivePin] = useState<PinLocation | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<ClientBrand>(CLIENT_BRANDS[0]);
+  const [hoveredBrand, setHoveredBrand] = useState<ClientBrand | null>(null);
+
+  const activeBrand = hoveredBrand || selectedBrand;
 
   return (
     <section id="brands-section" className="w-full bg-white text-slate-900 py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-y border-slate-200 relative overflow-hidden select-none">
@@ -110,21 +163,77 @@ export const ExactBrandSection: React.FC = () => {
           </p>
         </div>
 
+        {/* CLIENT BRAND QUICK SELECTOR PILLS */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-5xl mx-auto mb-6">
+          {CLIENT_BRANDS.map((brand) => {
+            const isSelected = selectedBrand.id === brand.id;
+            return (
+              <button
+                key={brand.id}
+                onClick={() => setSelectedBrand(brand)}
+                onMouseEnter={() => setHoveredBrand(brand)}
+                onMouseLeave={() => setHoveredBrand(null)}
+                className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+                  isSelected
+                    ? "bg-[#ff5722] text-white shadow-md shadow-orange-500/25 scale-105"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950"
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    isSelected ? "bg-white" : "bg-[#ff5722]"
+                  }`}
+                />
+                <span>{brand.name}</span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* DOTTED WORLD MAP CANVAS */}
-        <div className="relative w-full max-w-5xl mx-auto my-8 sm:my-12">
+        <div className="relative w-full max-w-5xl mx-auto my-6 sm:my-10">
           
-          {/* Active Tooltip Badge */}
-          {activePin && (
+          {/* Active Floating Tooltip Card */}
+          {activeBrand && (
             <div 
-              className="absolute z-20 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-3 px-3 py-1.5 bg-slate-950 text-white text-xs font-semibold rounded-lg shadow-xl border border-slate-800 transition-all duration-150 flex items-center gap-1.5"
+              className="absolute z-20 pointer-events-auto transform -translate-x-1/2 -translate-y-full mb-4 px-4 py-3 bg-slate-950 text-white rounded-xl shadow-2xl border border-slate-800 transition-all duration-200 min-w-[220px] max-w-[280px]"
               style={{
-                left: `${(activePin.x / 2000) * 100}%`,
-                top: `${(activePin.y / 857) * 100}%`,
+                left: `${(activeBrand.x / 2000) * 100}%`,
+                top: `${(activeBrand.y / 857) * 100}%`,
               }}
             >
-              <span className="w-2 h-2 rounded-full bg-[#ff5722] animate-pulse" />
-              <span>{activePin.city}</span>
-              <span className="text-slate-400 font-normal">({activePin.country})</span>
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff5722] bg-[#ff5722]/10 px-2 py-0.5 rounded">
+                  {activeBrand.category}
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">
+                  {activeBrand.country}
+                </span>
+              </div>
+
+              <h4 className="text-sm font-bold text-white tracking-tight flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#ff5722] animate-pulse" />
+                {activeBrand.name}
+              </h4>
+
+              <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                {activeBrand.tagline}
+              </p>
+
+              <div className="mt-2.5 pt-2 border-t border-slate-800 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400">
+                  📍 {activeBrand.city}
+                </span>
+                <a
+                  href={activeBrand.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff5722] hover:text-orange-400 transition"
+                >
+                  <span>Visit</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
           )}
 
@@ -137,7 +246,7 @@ export const ExactBrandSection: React.FC = () => {
               <defs>
                 {/* Dot Grid Pattern - 11px spacing with subtle dots matching screenshot */}
                 <pattern
-                  id="brand-dot-matrix-grid"
+                  id="client-dot-matrix-grid"
                   x="0"
                   y="0"
                   width="11"
@@ -148,14 +257,14 @@ export const ExactBrandSection: React.FC = () => {
                 </pattern>
 
                 {/* Continental Landmass Mask */}
-                <mask id="brand-world-continent-mask">
+                <mask id="client-world-continent-mask">
                   <rect width="2000" height="857" fill="black" />
                   <path d={worldPath.d} fill="white" />
                 </mask>
 
                 {/* Glow filter for orange dots */}
-                <filter id="brand-pin-drop-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#ff5722" floodOpacity="0.45" />
+                <filter id="client-pin-drop-shadow" x="-40%" y="-40%" width="180%" height="180%">
+                  <feDropShadow dx="0" dy="1.5" stdDeviation="3" floodColor="#ff5722" floodOpacity="0.6" />
                 </filter>
               </defs>
 
@@ -163,41 +272,87 @@ export const ExactBrandSection: React.FC = () => {
               <rect
                 width="2000"
                 height="857"
-                fill="url(#brand-dot-matrix-grid)"
-                mask="url(#brand-world-continent-mask)"
+                fill="url(#client-dot-matrix-grid)"
+                mask="url(#client-world-continent-mask)"
               />
 
-              {/* Location Pins */}
-              {PIN_LOCATIONS.map((pin, i) => (
-                <g
-                  key={i}
-                  className="cursor-pointer group"
-                  onMouseEnter={() => setActivePin(pin)}
-                  onMouseLeave={() => setActivePin(null)}
-                >
-                  {/* Subtle ping on pulse for key hubs */}
-                  {i % 4 === 0 && (
+              {/* ONLY CLIENT COMPANY LOCATION PINS */}
+              {CLIENT_BRANDS.map((brand) => {
+                const isSelected = activeBrand?.id === brand.id;
+                return (
+                  <g
+                    key={brand.id}
+                    className="cursor-pointer group"
+                    onClick={() => setSelectedBrand(brand)}
+                    onMouseEnter={() => setHoveredBrand(brand)}
+                    onMouseLeave={() => setHoveredBrand(null)}
+                  >
+                    {/* Animated Pulse Rings */}
                     <circle
-                      cx={pin.x}
-                      cy={pin.y}
-                      r="12"
-                      className="fill-[#ff5722] opacity-25 animate-ping"
-                      style={{ animationDuration: `${2.5 + (i % 3)}s` }}
+                      cx={brand.x}
+                      cy={brand.y}
+                      r={isSelected ? "18" : "11"}
+                      className={`fill-[#ff5722] transition-all duration-300 ${
+                        isSelected ? "opacity-35 animate-ping" : "opacity-20"
+                      }`}
+                      style={{ animationDuration: isSelected ? "1.8s" : "3s" }}
                     />
-                  )}
 
-                  {/* Main Orange Marker Dot */}
-                  <circle
-                    cx={pin.x}
-                    cy={pin.y}
-                    r="6.5"
-                    className="fill-[#ff5722] stroke-[1.5] stroke-white transition-transform duration-200 group-hover:scale-125"
-                    filter="url(#brand-pin-drop-shadow)"
-                  />
-                </g>
-              ))}
+                    {/* Outer Highlight Ring */}
+                    {isSelected && (
+                      <circle
+                        cx={brand.x}
+                        cy={brand.y}
+                        r="12"
+                        className="fill-none stroke-[#ff5722] stroke-[2] opacity-80"
+                      />
+                    )}
+
+                    {/* Main Orange Brand Pin */}
+                    <circle
+                      cx={brand.x}
+                      cy={brand.y}
+                      r={isSelected ? "8.5" : "7"}
+                      className="fill-[#ff5722] stroke-[2] stroke-white transition-transform duration-200 group-hover:scale-125"
+                      filter="url(#client-pin-drop-shadow)"
+                    />
+                  </g>
+                );
+              })}
             </svg>
           </div>
+        </div>
+
+        {/* ACTIVE BRAND SPOTLIGHT SUMMARY CARD */}
+        <div className="max-w-2xl mx-auto my-6 p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#ff5722]/10 border border-[#ff5722]/20 flex items-center justify-center shrink-0">
+              <Globe className="w-5 h-5 text-[#ff5722]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-bold text-slate-900 text-sm sm:text-base">
+                  {selectedBrand.name}
+                </h4>
+                <span className="text-[10px] font-bold text-[#ff5722] bg-[#ff5722]/10 px-2 py-0.5 rounded-full uppercase">
+                  {selectedBrand.category}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                📍 {selectedBrand.city}, {selectedBrand.country} &bull; {selectedBrand.tagline}
+              </p>
+            </div>
+          </div>
+
+          <a
+            href={selectedBrand.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-900 hover:bg-[#ff5722] text-white text-xs font-semibold transition-colors duration-200 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+          >
+            <span>Visit {selectedBrand.domain}</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
         </div>
 
         {/* THREE METRICS STATS FOOTER */}
