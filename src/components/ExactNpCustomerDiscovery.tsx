@@ -1,9 +1,101 @@
 import React, { useState } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, ExternalLink } from "lucide-react";
 
 interface ExactNpCustomerDiscoveryProps {
   onOpenConsultation?: (defaultNotes?: string) => void;
 }
+
+export interface ClientLogoItem {
+  id: string;
+  name: string;
+  domain: string;
+  url: string;
+  logo: string;
+  className: string;
+}
+
+export const CLIENT_ACTUAL_LOGOS: ClientLogoItem[] = [
+  {
+    id: "servicemycar",
+    name: "Service My Car",
+    domain: "servicemycar.com",
+    url: "https://servicemycar.com/uae",
+    logo: "/client-logos/servicemycar.svg",
+    className: "h-10 sm:h-12 max-w-[160px] brightness-0 invert",
+  },
+  {
+    id: "azcorealestate",
+    name: "AZCO Real Estate",
+    domain: "azcorealestate.ae",
+    url: "https://www.azcorealestate.ae/",
+    logo: "/client-logos/azco.png",
+    className: "h-11 sm:h-13 max-w-[140px] brightness-0 invert",
+  },
+  {
+    id: "modernwallarts",
+    name: "Modern Wall Arts",
+    domain: "modernwallarts.com",
+    url: "https://modernwallarts.com/",
+    logo: "/client-logos/modernwallarts.webp",
+    className: "h-10 sm:h-12 max-w-[130px] brightness-0 invert",
+  },
+  {
+    id: "humanconcern",
+    name: "Human Concern Intl",
+    domain: "humanconcern.org",
+    url: "https://humanconcern.org/",
+    logo: "/client-logos/humanconcern.png",
+    className: "h-10 sm:h-12 max-w-[130px] brightness-0 invert",
+  },
+  {
+    id: "thecarhaus",
+    name: "The Car Haus",
+    domain: "thecarhaus.com",
+    url: "https://www.thecarhaus.com/",
+    logo: "/client-logos/thecarhaus.png",
+    className: "h-10 sm:h-12 max-w-[150px] brightness-0 invert",
+  },
+  {
+    id: "lalahijabs",
+    name: "Lala Hijabs",
+    domain: "lalahijabs.com",
+    url: "https://lalahijabs.com/",
+    logo: "/client-logos/lalahijabs.png",
+    className: "h-9 sm:h-11 max-w-[140px] brightness-0 invert",
+  },
+  {
+    id: "alhurrcarrental",
+    name: "Al Hurr Car Rental",
+    domain: "alhurrcarrental.ae",
+    url: "https://www.alhurrcarrental.ae/en",
+    logo: "/client-logos/alhurr.png",
+    className: "h-10 sm:h-12 max-w-[150px] brightness-0 invert",
+  },
+  {
+    id: "miragerentcar",
+    name: "Mirage Rent a Car",
+    domain: "miragerentcar.com",
+    url: "https://miragerentcar.com/",
+    logo: "/client-logos/miragerentcar.svg",
+    className: "h-9 sm:h-11 max-w-[160px]", // SVG already white
+  },
+  {
+    id: "onlytourism",
+    name: "Only Tourism",
+    domain: "onlytourism.com",
+    url: "https://onlytourism.com/",
+    logo: "/client-logos/onlytourism.png",
+    className: "h-10 sm:h-12 max-w-[150px] brightness-0 invert",
+  },
+  {
+    id: "mmcdubai",
+    name: "MMC Dubai",
+    domain: "mmcdubai.ae",
+    url: "https://mmcdubai.ae/",
+    logo: "/client-logos/mmcdubai.png",
+    className: "h-10 sm:h-12 max-w-[140px] brightness-0 invert",
+  },
+];
 
 export const ExactNpCustomerDiscovery: React.FC<ExactNpCustomerDiscoveryProps> = ({
   onOpenConsultation,
@@ -135,114 +227,50 @@ export const ExactNpCustomerDiscovery: React.FC<ExactNpCustomerDiscoveryProps> =
 
         </div>
 
-        {/* Client Logos Grid (Monochrome White on Black matching Neil Patel image) */}
-        <div className="pt-10 border-t border-white/10">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-y-8 sm:gap-y-10 gap-x-6 items-center justify-items-center opacity-85">
-            
-            {/* HP */}
-            <div className="h-9 flex items-center justify-center text-white font-black tracking-tighter text-2xl border-2 border-white rounded-full w-9">
-              <span className="italic -ml-0.5 text-lg">hp</span>
-            </div>
+        {/* ACTUAL CLIENT LOGOS GRID (Replaces placeholder logos with user's actual 10 clients) */}
+        <div className="pt-10 sm:pt-14 border-t border-white/10">
+          <div className="text-center mb-8 sm:mb-10">
+            <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-slate-400">
+              Trusted By Category-Defining Brands Across North America & the Middle East
+            </p>
+          </div>
 
-            {/* SoFi */}
-            <div className="h-8 flex items-center justify-center text-white font-black tracking-wider text-xl">
-              SoFi <span className="text-xs ml-1 text-[#ff5e29]">&bull;&bull;&bull;</span>
-            </div>
-
-            {/* INTUIT */}
-            <div className="h-8 flex items-center justify-center text-white font-black tracking-wide text-xl">
-              intuit
-            </div>
-
-            {/* MITSUBISHI MOTORS */}
-            <div className="h-9 flex flex-col items-center justify-center text-white">
-              <div className="flex items-center gap-0.5 mb-0.5">
-                <span className="w-2.5 h-2.5 bg-white rotate-45"></span>
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-widest leading-none">MITSUBISHI</span>
-            </div>
-
-            {/* ADOBE */}
-            <div className="h-8 flex items-center justify-center text-white font-black tracking-wider text-xl gap-1.5">
-              <span className="font-serif italic text-2xl">A</span>
-              <span className="tracking-widest text-sm uppercase">Adobe</span>
-            </div>
-
-            {/* NISSAN */}
-            <div className="h-9 flex items-center justify-center text-white border border-white rounded-full px-3 py-1">
-              <span className="text-xs font-black tracking-widest uppercase">NISSAN</span>
-            </div>
-
-            {/* MARRIOTT */}
-            <div className="h-8 flex items-center justify-center text-white font-serif tracking-widest text-lg">
-              <span className="text-2xl font-bold mr-1">M</span> Marriott
-            </div>
-
-            {/* L'OREAL */}
-            <div className="h-8 flex items-center justify-center text-white font-sans tracking-[0.2em] uppercase text-sm font-bold">
-              L&apos;ORÉAL
-            </div>
-
-            {/* KUMON */}
-            <div className="h-8 flex items-center justify-center text-white font-sans tracking-wider text-base font-extrabold">
-              KUMON
-            </div>
-
-            {/* CARTIER */}
-            <div className="h-8 flex items-center justify-center text-white font-serif italic text-xl tracking-wider">
-              Cartier
-            </div>
-
-            {/* DHL */}
-            <div className="h-8 flex items-center justify-center text-white font-black italic text-2xl tracking-tighter">
-              DHL
-            </div>
-
-            {/* CLARINS */}
-            <div className="h-8 flex items-center justify-center text-white font-serif tracking-widest uppercase text-xs font-bold">
-              CLARINS
-            </div>
-
-            {/* UNILEVER */}
-            <div className="h-9 flex items-center justify-center text-white font-sans text-xl font-bold tracking-tight">
-              <span className="border-2 border-white rounded-t-full px-1 mr-1 text-sm font-serif">U</span> Unilever
-            </div>
-
-            {/* CANON */}
-            <div className="h-8 flex items-center justify-center text-white font-serif tracking-wider text-xl font-bold">
-              Canon
-            </div>
-
-            {/* PRUDENTIAL */}
-            <div className="h-8 flex items-center justify-center text-white font-serif tracking-wider text-sm font-bold">
-              <span className="mr-1 text-base">🏛️</span> Prudential
-            </div>
-
-            {/* CHURCH & DWIGHT */}
-            <div className="h-9 flex items-center justify-center text-white border border-white rounded-full px-2 py-0.5 text-[9px] font-black tracking-wider uppercase text-center leading-tight">
-              CHURCH & DWIGHT
-            </div>
-
-            {/* WESTERN UNION */}
-            <div className="h-8 flex items-center justify-center text-white font-black italic text-base tracking-tighter">
-              WesternUnion \\
-            </div>
-
-            {/* SONY MUSIC */}
-            <div className="h-8 flex items-center justify-center text-white font-sans text-xs tracking-widest uppercase font-bold">
-              SONY MUSIC
-            </div>
-
-            {/* DOMINO'S */}
-            <div className="h-8 flex items-center justify-center text-white font-sans text-xs font-black tracking-wider uppercase">
-              <span className="mr-1">🎲</span> Domino&apos;s
-            </div>
-
-            {/* LEVI'S */}
-            <div className="h-8 flex items-center justify-center text-white bg-white/10 px-3 py-1 rounded-sm text-xs font-black tracking-wider uppercase">
-              Levi&apos;s
-            </div>
-
+          {/* 2 columns on mobile (5 rows), 5 columns on desktop (2 rows) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-10 sm:gap-y-12 gap-x-8 items-center justify-items-center">
+            {CLIENT_ACTUAL_LOGOS.map((client) => (
+              <a
+                key={client.id}
+                href={client.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`${client.name} (${client.domain})`}
+                className="group flex flex-col items-center justify-center p-3 rounded-2xl hover:bg-white/5 transition-all duration-200 w-full"
+              >
+                <div className="h-14 sm:h-16 flex items-center justify-center w-full px-2">
+                  <img
+                    src={client.logo}
+                    alt={client.name}
+                    className={`${client.className} object-contain opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-200`}
+                    loading="lazy"
+                    onError={(e) => {
+                      // Fallback text if logo fails to render
+                      const target = e.currentTarget;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent && !parent.querySelector('.logo-fallback')) {
+                        const span = document.createElement('span');
+                        span.className = 'logo-fallback text-white font-black text-base tracking-tight text-center';
+                        span.innerText = client.name;
+                        parent.appendChild(span);
+                      }
+                    }}
+                  />
+                </div>
+                <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#ff5e29] transition-colors mt-1.5 opacity-0 group-hover:opacity-100 truncate max-w-full">
+                  {client.domain} &rarr;
+                </span>
+              </a>
+            ))}
           </div>
         </div>
 
