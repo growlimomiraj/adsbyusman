@@ -10,7 +10,6 @@ interface ExactHeroProps {
 }
 
 export const ExactHero: React.FC<ExactHeroProps> = ({
-  profile,
   onAnalyze,
   isLoading,
   auditInputRef,
@@ -29,89 +28,73 @@ export const ExactHero: React.FC<ExactHeroProps> = ({
   };
 
   return (
-    <section id="audit-section" className="bg-white pt-6 sm:pt-10 pb-10 sm:pb-14 relative overflow-hidden">
-      {/* Background contour lines positioned relative to centered content so they stay gracefully aligned on wide desktop */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden max-w-5xl mx-auto">
-        <div className="absolute top-0 right-0 sm:-right-8 lg:right-4 w-72 sm:w-96 h-72 sm:h-96 opacity-20 sm:opacity-25">
-          <svg viewBox="0 0 400 400" fill="none" className="w-full h-full text-slate-500 stroke-current">
-            <path d="M 120 -50 C 220 50, 320 150, 450 100" strokeWidth="1.2" />
-            <path d="M 90 -20 C 190 80, 290 180, 450 140" strokeWidth="1.2" />
-            <path d="M 60 10 C 160 110, 260 210, 450 180" strokeWidth="1.2" />
-            <path d="M 30 40 C 130 140, 230 240, 450 220" strokeWidth="1.2" />
-            <path d="M 0 70 C 100 170, 200 270, 450 260" strokeWidth="1.2" />
-            <path d="M -30 100 C 70 200, 170 300, 450 300" strokeWidth="1.2" />
-            <path d="M -60 130 C 40 230, 140 330, 450 340" strokeWidth="1.2" />
-            <path d="M -90 160 C 10 260, 110 360, 450 380" strokeWidth="1.2" />
-          </svg>
-        </div>
+    <section 
+      id="audit-section" 
+      className="relative min-h-[560px] sm:min-h-[620px] lg:min-h-[660px] flex items-center justify-center pt-20 sm:pt-28 pb-16 sm:pb-24 overflow-hidden bg-slate-950 font-sans"
+    >
+      {/* Background Image: Auditorium / Conference Stage */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/hero-conference-bg.jpg"
+          alt="Digital Marketing Keynote Conference"
+          className="w-full h-full object-cover object-[center_35%] filter brightness-[0.70] contrast-[1.1]"
+        />
+        {/* Layered dark gradients for maximum contrast and readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/65 to-slate-950/95" />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px]" />
       </div>
 
-      <div className="relative max-w-md sm:max-w-lg mx-auto px-4 sm:px-6 text-center">
-        {/* Main Headline matching screa 1.PNG */}
-        <h1 className="text-[28px] sm:text-[34px] font-extrabold tracking-tight leading-[1.25] text-center mb-3">
-          <div className="flex justify-center">
-            <span className="relative inline-block text-[#1a1a1a]">
-              Let&apos;s Grow Your Business
-              {/* Signature orange underline with rounded ends */}
-              <span className="absolute left-0 -bottom-0.5 w-full h-[3.5px] bg-[#f25f22] rounded-full"></span>
-            </span>
-          </div>
-          <span className="text-[#70757a] font-semibold">Through</span>
-          <br />
-          <span className="text-[#70757a] font-semibold">Digital Marketing.</span>
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+        
+        {/* Main Headline matching reference */}
+        <h1 className="text-3xl sm:text-5xl lg:text-[62px] font-black tracking-tight text-white leading-[1.15] mb-5 sm:mb-6 max-w-4xl">
+          Let’s grow{" "}
+          <span className="relative inline-block whitespace-nowrap">
+            <span className="relative z-10 text-white">your business</span>
+            {/* Signature orange rounded underline bar */}
+            <span className="absolute left-0 bottom-1 sm:bottom-2 w-full h-[6px] sm:h-[10px] bg-[#ff5e29] rounded-full z-0 opacity-95"></span>
+          </span>
+          <br className="hidden sm:inline" />{" "}
+          through digital marketing.
         </h1>
 
-        {/* Step 1 subtitle in clean grey matching screa 1.PNG */}
-        <p className="text-[15px] sm:text-[17px] text-[#70757a] font-normal mb-6 text-center">
-          Step 1: Order your free bespoke SEO + AI Visibility Audit
+        {/* Subtitle matching reference */}
+        <p className="text-sm sm:text-base lg:text-[18px] text-slate-200/95 font-normal leading-relaxed max-w-3xl mb-8 sm:mb-10 text-center">
+          Drop in your URL to get a free read on how you show up on Google and in AI answers — plus, the exact moves to grow. The same tools being used by +5,000 brands.
         </p>
 
-        {/* High-conversion Form: Vertical Stack of Input + Button matching screa 1.PNG */}
-        <form onSubmit={handleSubmit} className="w-full mb-3">
-          <div className="flex flex-col gap-3">
-            <input
-              ref={auditInputRef}
-              type="text"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="Your Website URL"
-              className="w-full px-4 py-3.5 sm:py-4 text-[15px] text-slate-800 placeholder:text-[#a0a0a0] bg-white border border-[#d1d5db] rounded-md focus:outline-none focus:border-[#f25f22] shadow-2xs font-normal"
-              disabled={isLoading}
-            />
+        {/* High-conversion Search Bar Pill matching reference */}
+        <div className="w-full max-w-2xl mx-auto bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-2xl shadow-black/60 border border-white/20">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-1 flex items-center">
+              <input
+                ref={auditInputRef}
+                type="text"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                placeholder="https://www.yourwebsite.com"
+                className="w-full px-4 sm:px-6 py-3.5 sm:py-4 text-sm sm:text-base text-slate-900 placeholder:text-slate-400 bg-transparent outline-none font-medium"
+                disabled={isLoading}
+              />
+            </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 sm:py-4 px-6 text-[15px] font-extrabold tracking-wider uppercase text-white bg-[#f25f22] hover:bg-[#d94e16] active:scale-[0.99] rounded-md shadow-2xs transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-black tracking-wider uppercase text-white bg-[#ff5e29] hover:bg-[#e04f1e] active:scale-[0.99] rounded-lg sm:rounded-xl shadow-lg shadow-orange-600/30 transition-all cursor-pointer whitespace-nowrap flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Processing...</span>
+                  <span>Analyzing...</span>
                 </div>
               ) : (
-                <span>ORDER FREE AUDIT</span>
+                <span>START MY ANALYSIS</span>
               )}
             </button>
-          </div>
-        </form>
-
-        {/* Starburst badge + hint matching screa 1.PNG */}
-        <div className="flex items-center justify-center gap-2 text-[#666666] text-sm font-normal mb-2">
-          {/* Orange 8-point star with radiating accent dots matching screa 1.PNG */}
-          <svg className="w-5 h-5 text-[#f25f22] shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2.5l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z" />
-            <circle cx="12" cy="0.8" r="0.8" />
-            <circle cx="21" cy="4.5" r="0.8" />
-            <circle cx="23.2" cy="12" r="0.8" />
-            <circle cx="21" cy="19.5" r="0.8" />
-            <circle cx="12" cy="23.2" r="0.8" />
-            <circle cx="3" cy="19.5" r="0.8" />
-            <circle cx="0.8" cy="12" r="0.8" />
-            <circle cx="3" cy="4.5" r="0.8" />
-          </svg>
-          <span>Manual teardown delivered directly to your email.</span>
+          </form>
         </div>
+
       </div>
     </section>
   );
