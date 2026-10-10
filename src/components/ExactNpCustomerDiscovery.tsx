@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, ExternalLink } from "lucide-react";
 
 interface ExactNpCustomerDiscoveryProps {
   onOpenConsultation?: (defaultNotes?: string) => void;
@@ -11,6 +11,7 @@ export interface ClientLogoItem {
   domain: string;
   url: string;
   logo: string;
+  favicon: string;
 }
 
 export const CLIENT_ACTUAL_LOGOS: ClientLogoItem[] = [
@@ -19,70 +20,80 @@ export const CLIENT_ACTUAL_LOGOS: ClientLogoItem[] = [
     name: "Service My Car",
     domain: "servicemycar.com",
     url: "https://servicemycar.com/uae",
-    logo: "/client-logos/servicemycar-white.svg",
+    logo: "/client-logos/servicemycar.svg",
+    favicon: "/client-logos/servicemycar-real-apple-icon.png",
   },
   {
     id: "azcorealestate",
     name: "AZCO Real Estate",
     domain: "azcorealestate.ae",
     url: "https://www.azcorealestate.ae/",
-    logo: "/client-logos/azco-white.svg",
+    logo: "/client-logos/azco-real-brandmark.png",
+    favicon: "/client-logos/azcorealestate-site-icon.png",
   },
   {
     id: "modernwallarts",
     name: "Modern Wall Arts",
     domain: "modernwallarts.com",
     url: "https://modernwallarts.com/",
-    logo: "/client-logos/modernwallarts-white.svg",
+    logo: "/client-logos/modernwallarts-real-logo.webp",
+    favicon: "/client-logos/modernwallarts-real-favicon.webp",
   },
   {
     id: "humanconcern",
     name: "Human Concern Intl",
     domain: "humanconcern.org",
     url: "https://humanconcern.org/",
-    logo: "/client-logos/humanconcern-white.svg",
+    logo: "/client-logos/humanconcern-real-logo.svg",
+    favicon: "/client-logos/humanconcern-site-icon.png",
   },
   {
     id: "thecarhaus",
     name: "The Car Haus",
     domain: "thecarhaus.com",
     url: "https://www.thecarhaus.com/",
-    logo: "/client-logos/thecarhaus-white.svg",
+    logo: "/client-logos/thecarhaus-real-logo.png",
+    favicon: "/client-logos/thecarhaus-site-icon.png",
   },
   {
     id: "lalahijabs",
     name: "Lala Hijabs",
     domain: "lalahijabs.com",
     url: "https://lalahijabs.com/",
-    logo: "/client-logos/lalahijabs-white.svg",
+    logo: "/client-logos/lalahijabs-site-icon.png",
+    favicon: "/client-logos/lalahijabs-site-icon.png",
   },
   {
     id: "alhurrcarrental",
     name: "Al Hurr Car Rental",
     domain: "alhurrcarrental.ae",
     url: "https://www.alhurrcarrental.ae/en",
-    logo: "/client-logos/alhurr-white.svg",
+    logo: "/client-logos/alhurr-real-emblem.png",
+    favicon: "/client-logos/alhurrcarrental-site-icon.png",
   },
   {
     id: "miragerentcar",
     name: "Mirage Rent a Car",
     domain: "miragerentcar.com",
     url: "https://miragerentcar.com/",
-    logo: "/client-logos/miragerentcar.svg",
+    logo: "/client-logos/miragerentcar-real-logo-white.svg",
+    favicon: "/client-logos/miragerentcar-site-icon.svg",
   },
   {
     id: "onlytourism",
     name: "Only Tourism",
     domain: "onlytourism.com",
     url: "https://onlytourism.com/",
-    logo: "/client-logos/onlytourism-white.svg",
+    logo: "/client-logos/onlytourism-real-logo-white.svg",
+    favicon: "/client-logos/onlytourism-site-icon.png",
   },
   {
     id: "mmcdubai",
     name: "MMC Dubai",
     domain: "mmcdubai.ae",
     url: "https://mmcdubai.ae/",
-    logo: "/client-logos/mmcdubai-white.svg",
+    logo: "/client-logos/mmcdubai-real-logo-white.png",
+    favicon: "/client-logos/mmcdubai-site-icon.png",
   },
 ];
 
@@ -94,6 +105,9 @@ export const ExactNpCustomerDiscovery: React.FC<ExactNpCustomerDiscoveryProps> =
     "GEO / AEO",
     "Paid media",
   ]);
+
+  // View mode for client assets: actual logos vs actual site favicons
+  const [viewMode, setViewMode] = useState<"logos" | "favicons">("logos");
 
   const channels = [
     { id: "geo-aeo", label: "GEO / AEO" },
@@ -216,40 +230,83 @@ export const ExactNpCustomerDiscovery: React.FC<ExactNpCustomerDiscoveryProps> =
 
         </div>
 
-        {/* ACTUAL CLIENT LOGOS GRID (Clean Transparent White Vectors - Zero Blinking) */}
+        {/* ACTUAL CLIENT LOGOS GRID - Copied Directly From Client Websites */}
         <div className="pt-10 sm:pt-14 border-t border-white/10">
-          <div className="text-center mb-8 sm:mb-10">
-            <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-slate-400">
-              Trusted By Category-Defining Brands Across North America & the Middle East
-            </p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 sm:mb-10">
+            <div>
+              <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-slate-400">
+                Trusted By Category-Defining Brands Across North America & the Middle East
+              </p>
+            </div>
+
+            {/* Toggle between Actual Logos & Actual Favicons */}
+            <div className="flex items-center bg-white/5 p-1 rounded-xl border border-white/10 text-xs font-bold">
+              <button
+                type="button"
+                onClick={() => setViewMode("logos")}
+                className={`px-3.5 py-1.5 rounded-lg transition-all duration-200 cursor-pointer ${
+                  viewMode === "logos"
+                    ? "bg-[#ff5e29] text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Actual Logos
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("favicons")}
+                className={`px-3.5 py-1.5 rounded-lg transition-all duration-200 cursor-pointer ${
+                  viewMode === "favicons"
+                    ? "bg-[#ff5e29] text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Site Favicons
+              </button>
+            </div>
           </div>
 
           {/* 2 columns on mobile (5 rows), 5 columns on desktop (2 rows) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-10 sm:gap-y-12 gap-x-8 items-center justify-items-center">
-            {CLIENT_ACTUAL_LOGOS.map((client) => (
-              <a
-                key={client.id}
-                href={client.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={`${client.name} - ${client.domain}`}
-                className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl hover:bg-white/[0.04] transition-colors duration-200 w-full cursor-pointer"
-              >
-                {/* Fixed height container eliminates any layout shift */}
-                <div className="h-14 sm:h-16 flex items-center justify-center w-full px-2">
-                  <img
-                    src={client.logo}
-                    alt={client.name}
-                    className="max-h-12 w-auto max-w-[150px] sm:max-w-[180px] object-contain opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-200"
-                    loading="eager"
-                  />
-                </div>
-                {/* Fixed height label prevents hover height shift */}
-                <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#ff5e29] transition-colors mt-2 text-center truncate max-w-full block">
-                  {client.domain} &rarr;
-                </span>
-              </a>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 items-stretch">
+            {CLIENT_ACTUAL_LOGOS.map((client) => {
+              const currentAsset = viewMode === "logos" ? client.logo : client.favicon;
+              return (
+                <a
+                  key={client.id}
+                  href={client.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Visit ${client.name} (${client.domain})`}
+                  className="group flex flex-col items-center justify-between p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 hover:border-[#ff5e29]/50 transition-all duration-200 w-full cursor-pointer relative"
+                >
+                  {/* Stable fixed-height container: Zero layout shift, Zero blinking */}
+                  <div className="h-16 w-full flex items-center justify-center px-2 py-1">
+                    <img
+                      key={`${client.id}-${viewMode}`}
+                      src={currentAsset}
+                      alt={`${client.name} logo`}
+                      className={`max-h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 ${
+                        viewMode === "favicons" 
+                          ? "max-w-[48px] max-h-12" 
+                          : "max-w-[140px] max-h-12"
+                      }`}
+                      loading="eager"
+                    />
+                  </div>
+
+                  {/* Brand name & domain with fixed layout */}
+                  <div className="w-full text-center mt-3 pt-2.5 border-t border-white/5">
+                    <div className="text-xs font-bold text-slate-200 group-hover:text-white truncate">
+                      {client.name}
+                    </div>
+                    <div className="text-[11px] font-medium text-slate-400 group-hover:text-[#ff5e29] transition-colors truncate mt-0.5 flex items-center justify-center gap-1">
+                      <span>{client.domain}</span>
+                      <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100" />
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
 
