@@ -8,13 +8,9 @@ import {
   ArrowUpRight,
   Sun,
   Moon,
-  CheckCircle2,
   Globe2,
   TrendingUp,
-  Building,
-  Car,
-  ShoppingBag,
-  Award
+  Palette
 } from "lucide-react";
 import worldPath from "../world-path.json";
 
@@ -234,8 +230,12 @@ export const CLIENT_BRANDS: ClientBrand[] = [
 export const ExactBrandSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"all" | "middle-east" | "north-america" | "automotive" | "ecommerce">("all");
   const [viewMode, setViewMode] = useState<"showcase" | "hubs" | "map">("showcase");
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+  // Default to clean light theme matching the site hero and user reference image
+  const [themeMode, setThemeMode] = useState<"light" | "slate" | "dark">("light");
   const [selectedMapBrand, setSelectedMapBrand] = useState<ClientBrand>(CLIENT_BRANDS[0]);
+
+  const isDarkMode = themeMode === "dark";
+  const isSlateMode = themeMode === "slate";
 
   // Filtered brands based on active tab
   const filteredBrands = CLIENT_BRANDS.filter((b) => {
@@ -256,7 +256,9 @@ export const ExactBrandSection: React.FC = () => {
       className={`relative w-full py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-y transition-colors duration-300 overflow-hidden select-none ${
         isDarkMode 
           ? "bg-[#0b0f19] text-white border-white/10" 
-          : "bg-white text-slate-900 border-slate-200"
+          : isSlateMode
+            ? "bg-[#f8fafc] text-slate-900 border-slate-200"
+            : "bg-white text-slate-900 border-slate-200/80"
       }`}
     >
       {/* Background Ambience */}
@@ -268,19 +270,21 @@ export const ExactBrandSection: React.FC = () => {
         </>
       ) : (
         <>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-[radial-gradient(ellipse_at_top,_rgba(242,95,34,0.08)_0%,_transparent_70%)] pointer-events-none blur-3xl" />
-          <div className="absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.03)_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-80" />
+          {/* Clean Light Ambience matching the site's hero */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-[radial-gradient(ellipse_at_top,_rgba(242,95,34,0.07)_0%,_transparent_70%)] pointer-events-none blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-[500px] h-[300px] bg-[radial-gradient(ellipse_at_bottom_right,_rgba(59,130,246,0.04)_0%,_transparent_70%)] pointer-events-none blur-3xl" />
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(148,163,184,0.12)_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-70" />
         </>
       )}
 
       <div className="relative z-10 max-w-7xl mx-auto">
         
-        {/* SECTION HEADER (Faithful to reference image with orange accent line) */}
+        {/* SECTION HEADER (Faithful to reference image with clean typography and signature orange accent line) */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
           <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold mb-3 shadow-xs backdrop-blur-sm ${
             isDarkMode 
               ? "bg-white/5 border border-white/10 text-orange-400" 
-              : "bg-orange-50 border border-orange-200 text-[#f25f22]"
+              : "bg-orange-50 border border-orange-200/80 text-[#f25f22]"
           }`}>
             <Sparkles className="w-3.5 h-3.5 text-[#f25f22]" />
             <span className="uppercase tracking-widest text-[11px]">Verified Client Portfolio &bull; $50M+ Revenue Scaled</span>
@@ -298,7 +302,7 @@ export const ExactBrandSection: React.FC = () => {
           <p className={`text-sm sm:text-base font-normal leading-relaxed max-w-2xl mx-auto ${
             isDarkMode ? "text-slate-300" : "text-slate-600"
           }`}>
-            We orchestrate the right mix of high-velocity media buying, search dominance, and conversion infrastructure for category-defining leaders across North America and the Middle East.
+            We orchestrate high-velocity media buying, search dominance, and conversion infrastructure for category-defining leaders across North America and the Middle East.
           </p>
         </div>
 
@@ -326,7 +330,7 @@ export const ExactBrandSection: React.FC = () => {
                       ? "bg-[#f25f22] text-white shadow-md shadow-orange-500/25"
                       : isDarkMode
                         ? "bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/5"
-                        : "bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200"
+                        : "bg-slate-100/80 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200/60"
                   }`}
                 >
                   {tab.label}
@@ -335,7 +339,7 @@ export const ExactBrandSection: React.FC = () => {
             })}
           </div>
 
-          {/* Right Controls: View Toggle & Light/Dark Theme Switcher */}
+          {/* Right Controls: View Mode & Background Theme Selectors */}
           <div className="flex items-center gap-2 shrink-0">
             {/* View Mode Toggle */}
             <div className={`flex items-center p-1 rounded-xl border ${
@@ -388,19 +392,49 @@ export const ExactBrandSection: React.FC = () => {
               </button>
             </div>
 
-            {/* Dark / Light Toggle */}
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              aria-label="Toggle section theme"
-              className={`p-2 rounded-xl border transition-all cursor-pointer ${
-                isDarkMode 
-                  ? "bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/10" 
-                  : "bg-slate-100 border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-200"
-              }`}
-              title={isDarkMode ? "Switch to Clean Light Theme" : "Switch to Luxury Dark Theme"}
-            >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
+            {/* Background Theme Switcher: Light, Slate, Dark */}
+            <div className={`flex items-center p-1 rounded-xl border ${
+              isDarkMode ? "bg-white/5 border-white/10" : "bg-slate-100 border-slate-200"
+            }`}>
+              <button
+                onClick={() => setThemeMode("light")}
+                title="Clean Pure White Background"
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  themeMode === "light"
+                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
+                    : isDarkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <Sun className="w-3.5 h-3.5 text-amber-500" />
+                <span className="hidden sm:inline">White</span>
+              </button>
+
+              <button
+                onClick={() => setThemeMode("slate")}
+                title="Soft Slate Studio Background"
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  themeMode === "slate"
+                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
+                    : isDarkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <Palette className="w-3.5 h-3.5 text-indigo-500" />
+                <span className="hidden sm:inline">Slate</span>
+              </button>
+
+              <button
+                onClick={() => setThemeMode("dark")}
+                title="Luxury Midnight Obsidian Background"
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  themeMode === "dark"
+                    ? "bg-[#0b0f19] text-white shadow-xs border border-white/20"
+                    : isDarkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <Moon className="w-3.5 h-3.5 text-slate-400" />
+                <span className="hidden sm:inline">Dark</span>
+              </button>
+            </div>
           </div>
 
         </div>
@@ -414,7 +448,9 @@ export const ExactBrandSection: React.FC = () => {
                 className={`group relative rounded-2xl border p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${
                   isDarkMode
                     ? "bg-gradient-to-b from-white/[0.07] to-white/[0.02] border-white/10 hover:border-[#f25f22]/50 hover:shadow-xl hover:shadow-orange-500/10"
-                    : "bg-white border-slate-200/90 hover:border-[#f25f22]/40 hover:shadow-xl hover:shadow-slate-200/60"
+                    : isSlateMode
+                      ? "bg-white border-slate-200 hover:border-[#f25f22]/40 hover:shadow-xl hover:shadow-slate-300/40"
+                      : "bg-white border-slate-200/90 hover:border-[#f25f22]/50 hover:shadow-xl hover:shadow-orange-500/10"
                 }`}
               >
                 <div>
@@ -644,10 +680,12 @@ export const ExactBrandSection: React.FC = () => {
           </div>
         )}
 
-        {/* VIEW 3: INTERACTIVE LUXURY DARK MAP */}
+        {/* VIEW 3: INTERACTIVE LUXURY MAP (Faithful to Reference Image) */}
         {viewMode === "map" && (
           <div className={`relative w-full rounded-2xl border p-2 sm:p-6 backdrop-blur-md ${
-            isDarkMode ? "bg-white/[0.03] border-white/10" : "bg-slate-50 border-slate-200"
+            isDarkMode 
+              ? "bg-white/[0.03] border-white/10" 
+              : "bg-white border-slate-200 shadow-sm"
           }`}>
             
             {/* Map Canvas */}
@@ -655,7 +693,13 @@ export const ExactBrandSection: React.FC = () => {
               <svg viewBox="0 0 2000 857" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <pattern id="brand-dot-grid" x="0" y="0" width="11" height="11" patternUnits="userSpaceOnUse">
-                    <circle cx="5.5" cy="5.5" r="1.75" fill={isDarkMode ? "#334155" : "#94a3b8"} opacity={isDarkMode ? 0.65 : 0.4} />
+                    <circle 
+                      cx="5.5" 
+                      cy="5.5" 
+                      r="1.75" 
+                      fill={isDarkMode ? "#334155" : "#94a3b8"} 
+                      opacity={isDarkMode ? 0.65 : 0.45} 
+                    />
                   </pattern>
                   <mask id="brand-world-mask">
                     <rect width="2000" height="857" fill="black" />
