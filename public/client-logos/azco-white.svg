@@ -1,0 +1,11 @@
+<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Iconic AZCO Triangle Tower Motif -->
+  <g fill="#ffffff">
+    <path d="M35 10L10 60h8l17-37 17 37h8L35 10z"/>
+    <path d="M35 22l-11 25h22L35 22z"/>
+    <path d="M31 38h8v4h-8v-4z"/>
+  </g>
+  <!-- Text -->
+  <text x="75" y="40" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="28" font-weight="900" letter-spacing="3" fill="#ffffff">AZCO</text>
+  <text x="76" y="56" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" font-weight="700" letter-spacing="4" fill="#ff5e29">REAL ESTATE</text>
+</svg>

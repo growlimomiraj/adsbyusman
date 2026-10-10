@@ -1,0 +1,11 @@
+<svg viewBox="0 0 260 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Diamond Calligraphy Seal -->
+  <g stroke="#ffffff" stroke-width="2.2" fill="none">
+    <rect x="18" y="18" width="34" height="34" transform="rotate(45 35 35)" stroke-width="2.5"/>
+    <path d="M28 28l14 14m0-14L28 42"/>
+    <circle cx="35" cy="35" r="4" fill="#ffffff"/>
+  </g>
+  <!-- Text -->
+  <text x="78" y="36" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="17" font-weight="900" letter-spacing="1.5" fill="#ffffff">MODERN WALL ARTS</text>
+  <text x="79" y="51" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="700" letter-spacing="3" fill="#ff5e29">CONTEMPORARY INTERIORS</text>
+</svg>

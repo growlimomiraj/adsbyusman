@@ -1,0 +1,13 @@
+<svg viewBox="0 0 260 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circular Garage Badge -->
+  <g fill="#ffffff">
+    <circle cx="35" cy="35" r="28" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+    <path d="M22 36l13-11 13 11v14H22V36z" stroke="#ffffff" stroke-width="2" fill="none"/>
+    <path d="M26 44h18v4H26z"/>
+    <circle cx="28" cy="40" r="2"/>
+    <circle cx="42" cy="40" r="2"/>
+  </g>
+  <!-- Text -->
+  <text x="78" y="38" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="20" font-weight="900" letter-spacing="2" fill="#ffffff">THE CAR HAUS</text>
+  <text x="79" y="52" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" letter-spacing="3.5" fill="#94a3b8">EXOTIC &amp; LUXURY</text>
+</svg>

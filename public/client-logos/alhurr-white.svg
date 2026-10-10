@@ -1,0 +1,10 @@
+<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Winged Emblem -->
+  <g fill="#ffffff">
+    <path d="M12 48c4-14 12-24 24-28-6 6-9 14-8 22-8-1-14 3-16 6z"/>
+    <path d="M22 45c3-9 8-15 16-18-4 4-6 9-5 15-5 0-9 2-11 3z"/>
+  </g>
+  <!-- Text -->
+  <text x="56" y="38" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="22" font-weight="900" letter-spacing="2" fill="#ffffff">AL HURR</text>
+  <text x="57" y="52" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" letter-spacing="3" fill="#94a3b8">CAR RENTAL DUBAI</text>
+</svg>

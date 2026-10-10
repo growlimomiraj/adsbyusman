@@ -1,0 +1,10 @@
+<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Flamingo Emblem -->
+  <g fill="#ffffff">
+    <path d="M26 22c2-4 6-6 10-5 3 1 4 4 3 7l-5 14h6v12h-3v-8h-6c-4 0-8-3-8-8 0-4 1-9 3-12z"/>
+    <circle cx="34" cy="20" r="2.5"/>
+  </g>
+  <!-- Text -->
+  <text x="60" y="38" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="22" font-weight="900" letter-spacing="2" fill="#ffffff">MMC DUBAI</text>
+  <text x="61" y="52" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="8.5" font-weight="700" letter-spacing="3" fill="#ff5e29">CORPORATE ADVISORY</text>
+</svg>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowRight, Check, ExternalLink } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 
 interface ExactNpCustomerDiscoveryProps {
   onOpenConsultation?: (defaultNotes?: string) => void;
@@ -11,7 +11,6 @@ export interface ClientLogoItem {
   domain: string;
   url: string;
   logo: string;
-  className: string;
 }
 
 export const CLIENT_ACTUAL_LOGOS: ClientLogoItem[] = [
@@ -20,56 +19,49 @@ export const CLIENT_ACTUAL_LOGOS: ClientLogoItem[] = [
     name: "Service My Car",
     domain: "servicemycar.com",
     url: "https://servicemycar.com/uae",
-    logo: "/client-logos/servicemycar.svg",
-    className: "h-10 sm:h-12 max-w-[160px] brightness-0 invert",
+    logo: "/client-logos/servicemycar-white.svg",
   },
   {
     id: "azcorealestate",
     name: "AZCO Real Estate",
     domain: "azcorealestate.ae",
     url: "https://www.azcorealestate.ae/",
-    logo: "/client-logos/azco.png",
-    className: "h-11 sm:h-13 max-w-[140px] brightness-0 invert",
+    logo: "/client-logos/azco-white.svg",
   },
   {
     id: "modernwallarts",
     name: "Modern Wall Arts",
     domain: "modernwallarts.com",
     url: "https://modernwallarts.com/",
-    logo: "/client-logos/modernwallarts.webp",
-    className: "h-10 sm:h-12 max-w-[130px] brightness-0 invert",
+    logo: "/client-logos/modernwallarts-white.svg",
   },
   {
     id: "humanconcern",
     name: "Human Concern Intl",
     domain: "humanconcern.org",
     url: "https://humanconcern.org/",
-    logo: "/client-logos/humanconcern.png",
-    className: "h-10 sm:h-12 max-w-[130px] brightness-0 invert",
+    logo: "/client-logos/humanconcern-white.svg",
   },
   {
     id: "thecarhaus",
     name: "The Car Haus",
     domain: "thecarhaus.com",
     url: "https://www.thecarhaus.com/",
-    logo: "/client-logos/thecarhaus.png",
-    className: "h-10 sm:h-12 max-w-[150px] brightness-0 invert",
+    logo: "/client-logos/thecarhaus-white.svg",
   },
   {
     id: "lalahijabs",
     name: "Lala Hijabs",
     domain: "lalahijabs.com",
     url: "https://lalahijabs.com/",
-    logo: "/client-logos/lalahijabs.png",
-    className: "h-9 sm:h-11 max-w-[140px] brightness-0 invert",
+    logo: "/client-logos/lalahijabs-white.svg",
   },
   {
     id: "alhurrcarrental",
     name: "Al Hurr Car Rental",
     domain: "alhurrcarrental.ae",
     url: "https://www.alhurrcarrental.ae/en",
-    logo: "/client-logos/alhurr.png",
-    className: "h-10 sm:h-12 max-w-[150px] brightness-0 invert",
+    logo: "/client-logos/alhurr-white.svg",
   },
   {
     id: "miragerentcar",
@@ -77,23 +69,20 @@ export const CLIENT_ACTUAL_LOGOS: ClientLogoItem[] = [
     domain: "miragerentcar.com",
     url: "https://miragerentcar.com/",
     logo: "/client-logos/miragerentcar.svg",
-    className: "h-9 sm:h-11 max-w-[160px]", // SVG already white
   },
   {
     id: "onlytourism",
     name: "Only Tourism",
     domain: "onlytourism.com",
     url: "https://onlytourism.com/",
-    logo: "/client-logos/onlytourism.png",
-    className: "h-10 sm:h-12 max-w-[150px] brightness-0 invert",
+    logo: "/client-logos/onlytourism-white.svg",
   },
   {
     id: "mmcdubai",
     name: "MMC Dubai",
     domain: "mmcdubai.ae",
     url: "https://mmcdubai.ae/",
-    logo: "/client-logos/mmcdubai.png",
-    className: "h-10 sm:h-12 max-w-[140px] brightness-0 invert",
+    logo: "/client-logos/mmcdubai-white.svg",
   },
 ];
 
@@ -227,7 +216,7 @@ export const ExactNpCustomerDiscovery: React.FC<ExactNpCustomerDiscoveryProps> =
 
         </div>
 
-        {/* ACTUAL CLIENT LOGOS GRID (Replaces placeholder logos with user's actual 10 clients) */}
+        {/* ACTUAL CLIENT LOGOS GRID (Clean Transparent White Vectors - Zero Blinking) */}
         <div className="pt-10 sm:pt-14 border-t border-white/10">
           <div className="text-center mb-8 sm:mb-10">
             <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-slate-400">
@@ -243,30 +232,20 @@ export const ExactNpCustomerDiscovery: React.FC<ExactNpCustomerDiscoveryProps> =
                 href={client.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`${client.name} (${client.domain})`}
-                className="group flex flex-col items-center justify-center p-3 rounded-2xl hover:bg-white/5 transition-all duration-200 w-full"
+                title={`${client.name} - ${client.domain}`}
+                className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl hover:bg-white/[0.04] transition-colors duration-200 w-full cursor-pointer"
               >
+                {/* Fixed height container eliminates any layout shift */}
                 <div className="h-14 sm:h-16 flex items-center justify-center w-full px-2">
                   <img
                     src={client.logo}
                     alt={client.name}
-                    className={`${client.className} object-contain opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-200`}
-                    loading="lazy"
-                    onError={(e) => {
-                      // Fallback text if logo fails to render
-                      const target = e.currentTarget;
-                      target.style.display = 'none';
-                      const parent = target.parentElement;
-                      if (parent && !parent.querySelector('.logo-fallback')) {
-                        const span = document.createElement('span');
-                        span.className = 'logo-fallback text-white font-black text-base tracking-tight text-center';
-                        span.innerText = client.name;
-                        parent.appendChild(span);
-                      }
-                    }}
+                    className="max-h-12 w-auto max-w-[150px] sm:max-w-[180px] object-contain opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-200"
+                    loading="eager"
                   />
                 </div>
-                <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#ff5e29] transition-colors mt-1.5 opacity-0 group-hover:opacity-100 truncate max-w-full">
+                {/* Fixed height label prevents hover height shift */}
+                <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#ff5e29] transition-colors mt-2 text-center truncate max-w-full block">
                   {client.domain} &rarr;
                 </span>
               </a>
