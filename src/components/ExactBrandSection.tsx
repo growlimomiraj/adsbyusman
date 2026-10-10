@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ExternalLink, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export interface ClientBrand {
   id: string;
@@ -10,9 +10,6 @@ export interface ClientBrand {
   country: string;
   flag: string;
   category: string;
-  // Percentage coordinates relative to map-with-dots.png (1260 x 611)
-  top: string;
-  left: string;
 }
 
 export const CLIENT_BRANDS: ClientBrand[] = [
@@ -25,8 +22,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "United States",
     flag: "🇺🇸",
     category: "Luxury E-Commerce & Decor",
-    top: "30.5%",
-    left: "19.5%",
   },
   {
     id: "thecarhaus",
@@ -37,8 +32,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "United States",
     flag: "🇺🇸",
     category: "Pre-Owned Luxury Dealership",
-    top: "37.5%",
-    left: "17.0%",
   },
   {
     id: "humanconcern",
@@ -49,8 +42,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "Canada",
     flag: "🇨🇦",
     category: "Global Humanitarian Relief",
-    top: "27.5%",
-    left: "22.5%",
   },
   {
     id: "lalahijabs",
@@ -61,8 +52,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "Canada",
     flag: "🇨🇦",
     category: "DTC Modest Fashion",
-    top: "31.0%",
-    left: "22.0%",
   },
   {
     id: "servicemycar",
@@ -73,8 +62,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "UAE / UK",
     flag: "🇦🇪",
     category: "Auto Tech & Servicing",
-    top: "40.0%",
-    left: "62.0%",
   },
   {
     id: "azcorealestate",
@@ -85,8 +72,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "United Arab Emirates",
     flag: "🇦🇪",
     category: "Luxury Real Estate",
-    top: "41.5%",
-    left: "62.5%",
   },
   {
     id: "alhurrcarrental",
@@ -97,8 +82,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "United Arab Emirates",
     flag: "🇦🇪",
     category: "Fleet Mobility & Rentals",
-    top: "39.0%",
-    left: "61.5%",
   },
   {
     id: "miragerentcar",
@@ -109,8 +92,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "United Arab Emirates",
     flag: "🇦🇪",
     category: "VIP Supercar Rentals",
-    top: "42.5%",
-    left: "62.0%",
   },
   {
     id: "onlytourism",
@@ -121,8 +102,6 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "United Arab Emirates",
     flag: "🇦🇪",
     category: "VIP Travel & Tourism",
-    top: "40.5%",
-    left: "63.0%",
   },
   {
     id: "mmcdubai",
@@ -133,13 +112,10 @@ export const CLIENT_BRANDS: ClientBrand[] = [
     country: "United Arab Emirates",
     flag: "🇦🇪",
     category: "Corporate Advisory",
-    top: "42.0%",
-    left: "63.5%",
   },
 ];
 
 export const ExactBrandSection: React.FC = () => {
-  const [activeBrand, setActiveBrand] = useState<ClientBrand | null>(null);
   const [metricSet, setMetricSet] = useState<"npd" | "agency">("npd");
 
   return (
@@ -168,70 +144,16 @@ export const ExactBrandSection: React.FC = () => {
           <strong className="text-slate-900 font-bold">the perfect team</strong>. We put a strong focus on chemistry, relevant experience and proximity. For our employees, it doesn’t matter where you live, we have employees all over the world.
         </p>
 
-        {/* 5. THE AUTHENTIC NP DIGITAL WORLD MAP WITH DOTS */}
+        {/* 5. THE AUTHENTIC NP DIGITAL WORLD MAP WITH DOTS (Static & Non-Clickable as requested) */}
         <div className="relative w-full max-w-5xl mx-auto mb-10 sm:mb-14">
           <div className="relative w-full aspect-[1260/611] overflow-hidden rounded-lg">
-            {/* NP Digital Map Image */}
             <img 
               src="/map-with-dots.png" 
               alt="Global strategy, local execution map with location dots" 
               className="w-full h-full object-contain pointer-events-none select-none"
               loading="eager"
             />
-
-            {/* Interactive Pulse Pins for Partner Companies */}
-            {CLIENT_BRANDS.map((brand) => (
-              <div
-                key={brand.id}
-                style={{ top: brand.top, left: brand.left }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group"
-                onClick={() => setActiveBrand(brand)}
-                onMouseEnter={() => setActiveBrand(brand)}
-              >
-                {/* Pulse ring on active location dots */}
-                <div className="w-5 h-5 sm:w-6 sm:h-6 -m-1 sm:-m-1.5 rounded-full bg-[#ff5e29]/20 group-hover:bg-[#ff5e29]/40 group-hover:scale-125 transition-all duration-200" />
-                <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#ff5e29] border-2 border-white shadow-xs group-hover:scale-110 transition-transform absolute inset-0 m-auto" />
-              </div>
-            ))}
           </div>
-
-          {/* Active Brand Tooltip / Card (shows when a map dot is clicked or hovered) */}
-          {activeBrand && (
-            <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-all animate-in fade-in duration-200">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{activeBrand.flag}</span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-bold text-slate-900 text-base">{activeBrand.name}</h4>
-                    <span className="text-[11px] font-bold text-[#ff5e29] bg-[#ff5e29]/10 px-2 py-0.5 rounded-full uppercase">
-                      {activeBrand.category}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    📍 {activeBrand.city}, {activeBrand.country} &bull; Verified Growth Partner
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <a
-                  href={activeBrand.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-1.5 rounded-lg bg-[#ff5e29] hover:bg-[#e04f1e] text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 shadow-xs"
-                >
-                  <span>Visit {activeBrand.domain}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-                <button
-                  onClick={() => setActiveBrand(null)}
-                  className="px-2.5 py-1.5 text-xs text-slate-400 hover:text-slate-600 rounded-lg"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* 6. THE 3 BIG STATS (Exact NP Digital animated number styling) */}
@@ -305,18 +227,18 @@ export const ExactBrandSection: React.FC = () => {
 
         </div>
 
-        {/* Subtle Metric Toggle */}
+        {/* Metric Mode Switch */}
         <div className="flex justify-center mt-6">
           <button
             onClick={() => setMetricSet(metricSet === "npd" ? "agency" : "npd")}
-            className="text-xs text-slate-600 hover:text-[#ff5e29] transition-colors cursor-pointer inline-flex items-center gap-1 font-semibold"
+            className="text-xs text-slate-500 hover:text-[#ff5e29] transition-colors cursor-pointer inline-flex items-center gap-1 font-semibold"
           >
             <span>{metricSet === "npd" ? "Switch to Performance Metrics ($50M+ Spend)" : "Switch to Global Scale (28 Countries • 1,000+ Team)"}</span>
             <span className="text-[#ff5e29]">&rarr;</span>
           </button>
         </div>
 
-        {/* 7. VERIFIED PARTNER COMPANIES DIRECTORY (All 10 Companies Clickable) */}
+        {/* 7. VERIFIED ENTERPRISE PARTNERS DIRECTORY */}
         <div className="mt-14 sm:mt-20 pt-8 sm:pt-12 border-t border-slate-100">
           <div className="text-center mb-6">
             <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-700">

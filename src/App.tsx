@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ExactHeader } from "./components/ExactHeader";
 import { ExactHero } from "./components/ExactHero";
+import { ExactNpCustomerDiscovery } from "./components/ExactNpCustomerDiscovery";
 import { ExactBrandSection } from "./components/ExactBrandSection";
 import { ExactGrowthSolutions } from "./components/ExactGrowthSolutions";
 import { ExactFooter } from "./components/ExactFooter";
@@ -194,7 +195,15 @@ export default function App() {
               />
             )}
 
-            {/* Exact Globally Recognized Renowned Brands Dark Grid */}
+            {/* Neil Patel "Find You Everywhere from Google to ChatGPT" Customer Discovery & Logo Cloud Section */}
+            <ExactNpCustomerDiscovery
+              onOpenConsultation={(notes) => {
+                if (notes) setTargetAuditUrl(notes);
+                setIsConsultationOpen(true);
+              }}
+            />
+
+            {/* Exact Globally Recognized Renowned Brands & Locations Map */}
             <ExactBrandSection />
 
             {/* Strategic Performance Growth Solutions & Enterprise Capabilities */}
